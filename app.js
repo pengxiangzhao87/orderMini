@@ -1,5 +1,9 @@
 //app.js
 App({
+  globalData:{
+    baseUrl:"http://47.104.197.255:8080/CMTGP/"
+    //baseUrl:"http://192.168.1.4:9000/CMTGP/"
+  },
   onLaunch: function () {
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
