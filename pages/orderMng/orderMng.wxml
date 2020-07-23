@@ -1,2 +1,10 @@
 <!--pages/orderMng/orderMng.wxml-->
-<text>pages/orderMng/orderMng.wxml</text>
+<view class='container'>
+  <swiper circular vertical>
+    <swiper-item wx:for='{{swipers}}' wx:key='swiper{{index}}'>
+      <view style='width:{{windowHeight}}px;height:{{windowWidth}}px;transform-origin:{{windowWidth/2}}px;transform:rotate(90deg)'>
+        <slot name='swiper{{index}}'></slot>
+      </view>
+    </swiper-item>
+  </swiper>
+</view>
