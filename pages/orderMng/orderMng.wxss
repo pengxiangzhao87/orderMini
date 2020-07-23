@@ -1,1 +1,14 @@
 /* pages/orderMng/orderMng.wxss */
+page{
+  width:100%;
+  height:100%;
+
+}
+
+.head{
+  margin-left:2%;
+  width:96%;
+  background-color: #FFFFFF;
+  margin-top:10px;
+  font-size: 14px;
+}

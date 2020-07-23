@@ -41,23 +41,9 @@ page{
   align-items: center;
   justify-content: center;
   border-radius: 2px;
-}
-
-.btn-left{
   color:#FFCC00;
-  width:40px;
-  height:20px;
-  font-size:12px;
   border:0.5px solid #FFD52E;
-  margin-right:5px;display: flex;justify-content: center;
-} 
-
-.btn-right{display: flex;
-  color:#CCCCCC;
   width:40px;
   height:20px;
   font-size:12px;
-  border:0.5px solid #CCCCCC;justify-content: center;
-  border-radius: 2px;
 }
- 

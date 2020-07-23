@@ -7,8 +7,13 @@ Page({
   },
 
   onLoad: function () {
+    this.setData({
+      baseUrl:app.globalData.baseUrl
+    })
+  },
+  onShow(){
     var that = this;
-    var baseUrl = app.globalData.baseUrl;
+    var baseUrl = that.data.baseUrl;
     var paras= {};
     paras.sId=1;
     wx.request({

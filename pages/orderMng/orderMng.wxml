@@ -1,10 +1,17 @@
 <!--pages/orderMng/orderMng.wxml-->
-<view class='container'>
-  <swiper circular vertical>
-    <swiper-item wx:for='{{swipers}}' wx:key='swiper{{index}}'>
-      <view style='width:{{windowHeight}}px;height:{{windowWidth}}px;transform-origin:{{windowWidth/2}}px;transform:rotate(90deg)'>
-        <slot name='swiper{{index}}'></slot>
-      </view>
-    </swiper-item>
-  </swiper>
+<view class="head">
+  <view calss="  display: flex; flex-direction:row;">
+    <view style="display: flex; flex-direction: row;margin-left:5px;">
+      <view style="width:80px;">开始时间：</view><picker style="width:100px;" mode="date" bindchange="changeStart"><input style="border:0.5px solid rgb(248, 248, 248)" name="startDate" value="{{startDate}}"></input></picker>
+    </view>
+    <view style="display: flex; flex-direction:row;margin-left:10px;">
+      <view style="width:80px;">结束时间：</view><picker style="width:100px;" mode="date" bindchange="changeEnd"><input name="startDate" value="{{endDate}}"></input></picker>
+    </view>
+    <view style="display: flex; flex-direction:row;margin-left:20px;">
+      <view style="width:80px;">商品名称：</view><input name="name" ></input>
+    </view>
+  </view>
+  <view calss="  display: flex; flex-direction:row;">
+    
+  </view>
 </view>

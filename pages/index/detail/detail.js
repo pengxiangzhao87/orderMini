@@ -65,6 +65,10 @@ Page({
     })
   },
   changeExtra:function(e){
+    var dis = e.currentTarget.dataset.dis;
+    if(dis){
+      return;
+    }
     var id = e.currentTarget.dataset.id;
     var flag = e.currentTarget.dataset.flag;
     var that = this;
@@ -159,7 +163,75 @@ Page({
       }
     });
   },
+  //退款
+  agree:function(e){
+    var id = e.currentTarget.dataset.id;
+    var that = this;
+    var baseUrl = that.data.baseUrl;
+    console.info(id)
+    var param = {};
+    param.ids = id
+    wx.request({
+      url: baseUrl+"order/agreeRefundDetail",
+      method: 'get',
+      data: param,
+      success: function(res) {
+        if(res.data.code==200){
+          that.onShow();
+        }else{
+          wx.showToast({
+            title: "服务器异常"
+          })
+        }
+      },
+      fail: function(err) {
+        wx.showToast({
+          title: "服务器异常"
+        })
+      }
+    });
+  },
+  //确定发货
   sendGoods:function(){
-
+    var that = this;
+    wx.showModal({
+      content: '确定发货吗',
+      success (res) {
+        if (res.confirm) {
+          var baseUrl = that.data.baseUrl;
+          var oid = that.data.oid;
+          var param = {};
+          param.oId = oid
+          wx.request({
+            url: baseUrl+"order/sendOrder",
+            method: 'get',
+            data: param,
+            success: function(res) {
+              if(res.data.code==200){
+                wx.showToast({
+                  title: '操作成功',
+                  success:function(){}
+                })
+                wx.switchTab({
+                  url: '/pages/index/index'
+                })
+              }else{
+                wx.showToast({
+                  title: "服务器异常"
+                })
+              }
+            },
+            fail: function(err) {
+              wx.showToast({
+                title: "服务器异常"
+              })
+            }
+          });
+        } else if (res.cancel) {
+           
+        }
+      }
+    })
+    
   }
 })
