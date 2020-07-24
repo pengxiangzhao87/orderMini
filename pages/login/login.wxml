@@ -1,2 +1,21 @@
 <!--pages/login/login.wxml-->
-<text>pages/login/login.wxml</text>
+<view style="display: flex;justify-content: center;">
+  <image style="height:100px;width:100px;border-radius:20px;margin-top:15%;" src="/image/logo.png"></image>
+</view>
+
+<view style="display:flex;justify-content: center;font-size:14px;margin-top:20px;">食朝夕商户版</view>
+
+<form bindsubmit="login" style="display:flex;justify-content: center;width:100%;margin-top:10px;">
+  <view>
+    <view class="row">
+      <image src="/image/user.png" style="margin-left:30px;height:20px;width:20px;"></image>
+      <input placeholder="请输入账号" name="account" placeholder-style="color:#999999;font-size:14px;" style="margin-left:7px;height:30px;width:100px;"></input>
+    </view>
+    <view class="row">
+      <image src="/image/pwd.png" style="margin-left:30px;height:20px;width:20px;"></image>
+      <input placeholder="请输入密码" password="true" name="pwd" placeholder-style="color:#999999;font-size:14px;" style="margin-left:7px;height:30px;width:100px;"></input>
+    </view>
+    <button class="btn" form-type="submit"><text decode="true">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</text></button>
+  </view>
+</form >
+
