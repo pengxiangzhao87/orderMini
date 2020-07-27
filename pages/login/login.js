@@ -19,7 +19,7 @@ Page({
     var paras = {};
     paras.account = account;
     paras.password = pwd;
-    paras.openid = wx.getStorageSync('openid');
+    paras.token = wx.getStorageSync('token');
     wx.request({
       url: baseUrl+"supplier/login",
       method: 'get',
@@ -27,7 +27,7 @@ Page({
       success(res) {
         console.info(res)
         if(res.data.code==200){
-          wx.setStorageSync('sid', res.data.data)
+          wx.setStorageSync('isLogin', 1)
           wx.requestSubscribeMessage({
             tmplIds: ['oGUeI8FFPely9OFgNkukIKzlVQ7Ze8uiBQ5BIHCxLS0','HFb7VThCuI0TK8W38LR1oPTv8wL8dxzJKTeF11eUce4'],
             success (res) { 

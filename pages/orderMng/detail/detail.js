@@ -19,7 +19,6 @@ Page({
     var baseUrl = app.globalData.baseUrl;
     var paras = {};
     paras.oId=that.data.oid;
-    console.info(paras)
     wx.request({
       url: baseUrl+"order/selectOrderDetail",
       method: 'get',
@@ -27,7 +26,6 @@ Page({
       success(res) {
         if(res.data.code==200){
           var data = res.data.data;
-          console.info(data)
           var imageList = [];
           var extraList = [];
           for(var idx in data){

@@ -26,7 +26,7 @@ Page({
       endDate:nowDate
     })
     var paras = {};
-    paras.sid = wx.getStorageSync('sid')
+    paras.token=wx.getStorageSync('token');
     paras.startDate='2020-01-01';
     paras.endDate=nowDate;
     paras.pageNo=1;
@@ -105,7 +105,7 @@ Page({
     var that = this;
     var baseUrl = that.data.baseUrl;
     var paras = {};
-    paras.sid = wx.getStorageSync('sid')
+    paras.token=wx.getStorageSync('token');
     paras.startDate=e.detail.value.startDate;
     paras.endDate=e.detail.value.endDate;
     paras.sName = e.detail.value.name;

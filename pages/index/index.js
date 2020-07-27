@@ -16,7 +16,7 @@ Page({
     var that = this;
     var baseUrl = that.data.baseUrl;
     var paras= {};
-    paras.sId=1;
+    paras.token=wx.getStorageSync('token');
     wx.request({
       url: baseUrl+"order/selectPendOrder",
       method: 'get',
