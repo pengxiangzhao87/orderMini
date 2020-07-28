@@ -38,11 +38,9 @@ Page({
             imageList[imageList.length]=image;
             var item={};
             item.id=data[idx].id;
-            item.none=true;
-            item.back=false;
-            item.pay=false;
             extraList[extraList.length]=item;
           }
+          console.info(data)
           that.setData({
             list:data,
             baseUrl:baseUrl,

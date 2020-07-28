@@ -168,32 +168,57 @@ Page({
     var id = e.currentTarget.dataset.id;
     var that = this;
     var baseUrl = that.data.baseUrl;
-    console.info(id)
-    var param = {};
-    param.ids = id
-    wx.request({
-      url: baseUrl+"order/agreeRefundDetail",
-      method: 'get',
-      data: param,
-      success: function(res) {
-        if(res.data.code==200){
-          that.onShow();
-        }else{
-          wx.showToast({
-            title: "服务器异常"
-          })
+    wx.showModal({
+      content: '确定同意退款吗?',
+      success (res) {
+        if (res.confirm) {
+          var param = {};
+          param.ids = id
+          wx.request({
+            url: baseUrl+"order/agreeRefundDetail",
+            method: 'get',
+            data: param,
+            success: function(res) {
+              if(res.data.code==200){
+                that.onShow();
+              }else{
+                wx.showToast({
+                  title: "服务器异常"
+                })
+              }
+            },
+            fail: function(err) {
+              wx.showToast({
+                title: "服务器异常"
+              })
+            }
+          });
         }
-      },
-      fail: function(err) {
-        wx.showToast({
-          title: "服务器异常"
-        })
       }
-    });
+    })
+    
   },
   //确定发货
   sendGoods:function(){
     var that = this;
+    var list = that.data.list;
+    for(var idx in list){
+      if(list[idx].chargeback_status==1){
+        wx.showToast({
+          title: "有退款申请未处理"
+        })
+        return;
+      }
+    }
+    var extraList = that.data.extraList;
+    var detailList = [];
+    for(var idx in extraList){
+      var item = extraList[idx];
+      var detail = {};
+      detail.id=item.id;
+      detail.isExtra=item.none?0:(item.back?1:2);
+      detailList[detailList.length] = detail;
+    }
     wx.showModal({
       content: '确定发货吗',
       success (res) {
@@ -201,7 +226,8 @@ Page({
           var baseUrl = that.data.baseUrl;
           var oid = that.data.oid;
           var param = {};
-          param.oId = oid
+          param.oId = oid;
+          param.detailList = detailList;
           wx.request({
             url: baseUrl+"order/sendOrder",
             method: 'get',

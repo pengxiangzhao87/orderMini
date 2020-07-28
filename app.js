@@ -10,10 +10,27 @@ App({
     if(wx.getStorageSync('token')=='' || wx.getStorageSync('isLogin')=='' || wx.getStorageSync('isLogin')==0){
       that.userLogin(baseUrl);
     }else{
-      wx.switchTab({
-        url: '/pages/index/index',
+      wx.request({
+        url: baseUrl+"supplier/checkToken",
+        method: 'get',
+        data: {token:wx.getStorageSync('token')},
+        success(res) {
+          var code = res.data.code;
+          if(code==200){
+            wx.switchTab({
+              url: '/pages/index/index',
+            })
+          }else{
+            that.userLogin(baseUrl);
+          }
+        },
+        fail(res) {
+          wx.showToast({
+            icon:'none',
+            title: '服务器异常'
+          })
+        }
       })
-
     }
   },
   userLogin: function(baseUrl) {
@@ -29,7 +46,6 @@ App({
           success(res) {
             if(res.data.code==200){
               var data = res.data.data;
-              console.info(data)
               wx.setStorageSync('token', data.token);
               wx.setStorageSync('isLogin', data.isLogin);
               if(data.isLogin==1){
@@ -42,6 +58,12 @@ App({
                 title: "获取参数异常"
               })
             }
+          },
+          fail(res) {
+            wx.showToast({
+              icon:'none',
+              title: '服务器异常'
+            })
           }
         })
       },
