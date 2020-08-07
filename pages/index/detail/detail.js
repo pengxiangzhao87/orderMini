@@ -5,8 +5,7 @@ Page({
     list:{},
     baseUrl:'',
     imageList:[],
-    oid:0,
-    extraList:[]
+    oid:0
   },
 
   onLoad:function(e) {
@@ -26,9 +25,7 @@ Page({
       success(res) {
         if(res.data.code==200){
           var data = res.data.data;
-          console.info(data)
           var imageList = [];
-          var extraList = [];
           for(var idx in data){
             var extra_img_url = data[idx].extra_img_url;
             var image = {};
@@ -37,18 +34,11 @@ Page({
               image.urlList = extra_img_url.split('~');
             }
             imageList[imageList.length]=image;
-            var item={};
-            item.id=data[idx].id;
-            item.none=true;
-            item.back=false;
-            item.pay=false;
-            extraList[extraList.length]=item;
           }
           that.setData({
             list:data,
             baseUrl:baseUrl,
-            imageList:imageList,
-            extraList:extraList
+            imageList:imageList
           })
         }else{
           wx.showToast({
@@ -67,27 +57,33 @@ Page({
   changeExtra:function(e){
     var dis = e.currentTarget.dataset.dis;
     if(dis){
+      wx.showToast({
+        icon:'none',
+        title: '已退款无法变更',
+        duration:1500
+      })
       return;
     }
     var id = e.currentTarget.dataset.id;
     var flag = e.currentTarget.dataset.flag;
     var that = this;
-    var extraList = that.data.extraList;
-    for(var idx in extraList){
-      var item = extraList[idx];
-      if(item.id==id){
-        item.none=flag==0;
-        item.back=flag==1;
-        item.pay=flag==2;
+    var baseUrl = that.data.baseUrl;
+    var param = {};
+    param.id=id;
+    param.isExtra=parseInt(flag);
+    wx.request({
+      url: baseUrl+"order/changeIsExtra",
+      method: 'get',
+      data: param,
+      success: function(res) {
+        if(res.data.code==200){
+          that.onShow();
+        }
       }
-    }
-    that.setData({
-      extraList:extraList
     })
-
   },
   uploadPic:function(e){
-    var id = e.currentTarget.dataset.id
+    var id = e.currentTarget.dataset.id;
     var that = this;
     var baseUrl = that.data.baseUrl;
     wx.chooseImage({
@@ -128,7 +124,6 @@ Page({
             }
           })
         }).catch(function(err) {
-          console.log(err);
         });
       }
     })
@@ -149,7 +144,14 @@ Page({
       data: param,
       success: function(res) {
         if(res.data.code==200){
-          that.onShow();
+          wx.showToast({
+            icon:'none',
+            title: '删除成功',
+            duration:1500,
+            success:function(res){
+              that.onShow();
+            }
+          })
         }else{
           wx.showToast({
             title: "删除失败"
@@ -180,7 +182,14 @@ Page({
             data: param,
             success: function(res) {
               if(res.data.code==200){
-                that.onShow();
+                wx.showToast({
+                  title: '操作成功',
+                  duration:1500,
+                  success:function(res){
+                    that.onShow();
+                  }
+                })
+                
               }else{
                 wx.showToast({
                   title: "服务器异常"
@@ -210,15 +219,6 @@ Page({
         return;
       }
     }
-    var extraList = that.data.extraList;
-    var detailList = [];
-    for(var idx in extraList){
-      var item = extraList[idx];
-      var detail = {};
-      detail.id=item.id;
-      detail.isExtra=item.none?0:(item.back?1:2);
-      detailList[detailList.length] = detail;
-    }
     wx.showModal({
       content: '确定发货吗',
       success (res) {
@@ -227,7 +227,6 @@ Page({
           var oid = that.data.oid;
           var param = {};
           param.oId = oid;
-          param.detailList = detailList;
           wx.request({
             url: baseUrl+"order/sendOrder",
             method: 'get',
@@ -235,12 +234,16 @@ Page({
             success: function(res) {
               if(res.data.code==200){
                 wx.showToast({
-                  title: '操作成功',
-                  success:function(){}
+                  title: '操作成功，已通知用户，请尽快发货',
+                  success:function(){
+                    setTimeout(function () {
+                      wx.switchTab({
+                        url: '/pages/index/index'
+                      })
+                    }, 2000);
+                  }
                 })
-                wx.switchTab({
-                  url: '/pages/index/index'
-                })
+                
               }else{
                 wx.showToast({
                   title: "服务器异常"

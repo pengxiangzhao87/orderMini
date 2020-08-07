@@ -13,22 +13,24 @@
       </view>
       <view style="margin-left:10px;margin-top:5px;">数量：{{item.num}}</view>
       <view style="margin-left:10px;margin-top:5px;">总计：￥{{item.payment_price}}</view>
+
       <view class="row" style="margin-top:5px;margin-bottom:5px;justify-content: center;">
         <view bindtap="changeExtra" data-id="{{item.id}}" data-flag="0" data-dis="{{item.chargeback_status==2}}" style="display:flex;height:20px;width:30%;align-items: center;">
           <text style="height:20px;font-size:12px;">无差价</text>
-          <image style="width:16px;height:16px;margin-left:5px;" src="{{extraList[idx].none?'/image/zhifu_xuanz@3x.png':'/image/zhifu_weixuan@3x.png'}}">
+          <image style="width:16px;height:16px;margin-left:5px;" src="{{item.is_extra==0?'/image/zhifu_xuanz@3x.png':'/image/zhifu_weixuan@3x.png'}}">
         </image>
         </view>
         <view bindtap="changeExtra" data-id="{{item.id}}" data-flag="1" data-dis="{{item.chargeback_status==2}}" style="display:flex;height:20px;width:30%;align-items: center;">
           <text style="height:20px;font-size:12px;">退还</text>
-          <image style="width:16px;height:16px;margin-left:5px;" src="{{extraList[idx].back?'/image/zhifu_xuanz@3x.png':'/image/zhifu_weixuan@3x.png'}}"></image>
+          <image style="width:16px;height:16px;margin-left:5px;" src="{{item.is_extra==1?'/image/zhifu_xuanz@3x.png':'/image/zhifu_weixuan@3x.png'}}"></image>
         </view>
         <view bindtap="changeExtra" data-id="{{item.id}}" data-flag="2" data-dis="{{item.chargeback_status==2}}" style="display:flex;height:20px;width:30%;align-items: center;">
           <text style="height:20px;font-size:12px;">补差价</text>
-          <image style="width:16px;height:16px;margin-left:5px;" src="{{extraList[idx].pay?'/image/zhifu_xuanz@3x.png':'/image/zhifu_weixuan@3x.png'}}"></image>
+          <image style="width:16px;height:16px;margin-left:5px;" src="{{item.is_extra==2?'/image/zhifu_xuanz@3x.png':'/image/zhifu_weixuan@3x.png'}}"></image>
         </view>  
       </view>
-      <view hidden="{{extraList[idx].none}}" >
+
+      <view hidden="{{item.is_extra==0}}" >
         <view class="item" style="display:flex;flex-direction:row;">
           <view  wx:for="{{imageList}}" wx:for-index="idx" wx:key="oid" wx:for-item="detail">
             <view wx:if="{{detail.id==item.id}}" style="display:flex;flex-direction:row;">
@@ -47,6 +49,7 @@
           </view>
         </view>
       </view>
+
     </view>
   </view>
  </view>
