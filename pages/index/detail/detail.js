@@ -115,13 +115,10 @@ Page({
         }));
         promise.then(function(results) {
           wx.hideLoading({});
+          that.onShow();
           wx.showToast({
             title: '上传成功',
-            success:function(){
-              setTimeout(function () {
-                that.onShow();
-              }, 1000);
-            }
+            duration:1000
           })
         }).catch(function(err) {
         });
@@ -144,13 +141,11 @@ Page({
       data: param,
       success: function(res) {
         if(res.data.code==200){
+          that.onShow();
           wx.showToast({
             icon:'none',
             title: '删除成功',
-            duration:1500,
-            success:function(res){
-              that.onShow();
-            }
+            duration:1500
           })
         }else{
           wx.showToast({
@@ -182,12 +177,10 @@ Page({
             data: param,
             success: function(res) {
               if(res.data.code==200){
+                that.onShow();
                 wx.showToast({
                   title: '操作成功',
-                  duration:1500,
-                  success:function(res){
-                    that.onShow();
-                  }
+                  duration:1000
                 })
                 
               }else{

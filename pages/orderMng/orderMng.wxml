@@ -16,7 +16,7 @@
       <view style="display: flex; flex-direction:row;margin-left:10px;">
         <view style="width:70px;">商品名称：</view><input style="padding-left:5px;border:0.5px solid #999999;" placeholder="请输入商品名称" placeholder-style="font-size:12px;color:#999999;" name="name" ></input>
       </view>
-      <button style="background-color:#FFD52E;height:25px;width:100px;font-size:14px;align-items: center;display:flex;justify-content: center;" form-type="submit">查询</button>
+      <button style="color:white;background-color:#1296db;height:25px;width:100px;font-size:14px;align-items: center;display:flex;justify-content: center;" form-type="submit">查询</button>
     </view>
   </view>
 </form>
@@ -24,11 +24,11 @@
 
 <view class="body">
   <view class="body-row">
-    <view style="display:flex;justify-content: center;width:20%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;">订单编号</view>
-    <view style="display:flex;justify-content: center;width:30%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">订单日期</view>
-    <view style="display:flex;justify-content: center;width:15%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">状态</view>
-    <view style="display:flex;justify-content: center;width:15%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">收货人</view>
-    <view style="display:flex;justify-content: center;width:20%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">实收金额</view>
+    <view style="color:white;display:flex;justify-content: center;width:20%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;">订单编号</view>
+    <view style="color:white;display:flex;justify-content: center;width:30%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">订单日期</view>
+    <view style="color:white;display:flex;justify-content: center;width:15%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">状态</view>
+    <view style="color:white;display:flex;justify-content: center;width:15%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">收货人</view>
+    <view style="color:white;display:flex;justify-content: center;width:20%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">实收金额</view>
   </view>
   <view wx:for="{{orderList}}" wx:for-index="idx" wx:key="oid" wx:for-item="item">
     <view class="item-row" bindtap="clickRow" data-oid="{{item.o_id}}">

@@ -1,9 +1,8 @@
 {
   "pages":[
     "pages/login/login",
-    "pages/orderMng/orderMng",
-    "pages/index/index"
-    
+    "pages/index/index",
+    "pages/orderMng/orderMng"    
   ],
   "window":{
     "backgroundTextStyle":"light",

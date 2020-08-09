@@ -24,7 +24,7 @@ page{
   display: flex;
   flex-direction: row;
   justify-content: center;
-  background-color: #FFD52E;
+  background-color: #1296db;
 }
 
 .item-row{

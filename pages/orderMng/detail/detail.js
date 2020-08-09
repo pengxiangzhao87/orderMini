@@ -116,13 +116,10 @@ Page({
         }));
         promise.then(function(results) {
           wx.hideLoading({});
+          that.onShow();
           wx.showToast({
             title: '上传成功',
-            success:function(){
-              setTimeout(function () {
-                that.onShow();
-              }, 1000);
-            }
+            duration:2000
           })
         }).catch(function(err) {
           console.log(err);

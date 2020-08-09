@@ -24,7 +24,7 @@ page{
 .page_bottom{
   position:fixed; 
   bottom:10px;
-  background-color: #FFD52E;
+  background-color: #1296db;
   display: flex;
   border-radius: 4px;
   align-items: center;
@@ -41,8 +41,8 @@ page{
   align-items: center;
   justify-content: center;
   border-radius: 2px;
-  color:#FFCC00;
-  border:0.5px solid #FFD52E;
+  color:#1296db;
+  border:0.5px solid #1296db;
   width:40px;
   height:20px;
   font-size:12px;

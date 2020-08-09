@@ -55,4 +55,4 @@
  </view>
 
   
-  <button class="page_bottom" style="width:90%;height:45px;margin-left:5%;" bindtap="sendGoods">确定发货</button> 
+  <button class="page_bottom" style="color:white;width:90%;height:45px;margin-left:5%;" bindtap="sendGoods">确定发货</button> 
