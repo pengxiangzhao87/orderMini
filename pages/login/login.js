@@ -111,6 +111,7 @@ Page({
         }
        
       },fail(res){
+        console.info(res)
         wx.showToast({
           title: "服务器异常"
         })
