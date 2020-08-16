@@ -7,8 +7,8 @@
     </view>
     <view style="margin-top:5px;" class="row" >
       <view style="margin-left:10px;">{{item.consignee_name}}</view>
-      <view style="margin-left:5px;">{{item.consignee_phone}}</view>
+      <view style="margin-left:5px;color:yellow" catchtap="callPhone" data-phone="{{item.consignee_phone}}">{{item.consignee_phone}}</view>
     </view>
-    <view style="margin-left:10px;margin-top:5px;margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:80%">{{item.consignee_address}}</view>
+    <view style="margin-left:10px;margin-top:5px;margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:80%;font-size:12px;font-weight: 350;">{{item.consignee_address}}</view>
   </view>
 </view> 

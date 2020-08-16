@@ -23,6 +23,11 @@ Page({
       data: paras,
       success(res) {
         if(res.data.code==200){
+          if(res.data.msg=='1'){
+            wx.redirectTo({
+              url: '/pages/login/login',
+            })
+          }
           that.setData({
             orderList:res.data.data
           })
@@ -44,6 +49,49 @@ Page({
     var oid = e.currentTarget.dataset.oid;
     wx.navigateTo({
       url: '/pages/index/detail/detail?oid='+oid,
+    })
+  },
+  onPullDownRefresh:function(){
+    var that = this;
+    setTimeout(() => {
+      var baseUrl = that.data.baseUrl;
+      var paras= {};
+      paras.token=wx.getStorageSync('token');
+      wx.request({
+        url: baseUrl+"order/selectPendOrder",
+        method: 'get',
+        data: paras,
+        success(res) {
+          if(res.data.code==200){
+            if(res.data.msg=='1'){
+              wx.redirectTo({
+                url: '/pages/login/login',
+              })
+            }
+            that.setData({
+              orderList:res.data.data
+            })
+          }else{
+            wx.showToast({
+              icon:'none',
+              title: '服务器异常'
+            })
+          }
+          wx.stopPullDownRefresh();
+        },fail(res){
+          wx.showToast({
+            icon:'none',
+            title: '服务器异常'
+          })
+          wx.stopPullDownRefresh();
+        }
+      })
+    }, 1000);
+  },
+  callPhone:function(e){
+    var phone = e.currentTarget.dataset.phone;
+    wx.makePhoneCall({
+      phoneNumber: phone
     })
   }
 })

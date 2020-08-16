@@ -21,10 +21,8 @@ Page({
         method: 'get',
         data: {token:wx.getStorageSync('token')},
         success(res) {
-          console.info(res)
           var code = res.data.code;
           if(code==200){
-            console.info('ok')
             wx.switchTab({
               url: '/pages/index/index'
             })
@@ -56,6 +54,7 @@ Page({
               var data = res.data.data;
               wx.setStorageSync('token', data.token);
               wx.setStorageSync('isLogin', data.isLogin);
+              wx.setStorageSync('isHidden', data.isHidden)
               if(data.isLogin==1){
                 wx.switchTab({
                   url: '/pages/index/index',
@@ -91,9 +90,9 @@ Page({
       method: 'get',
       data: paras,
       success(res) {
-        console.info(res)
         if(res.data.code==200){
           wx.setStorageSync('isLogin', 1)
+          wx.setStorageSync('isHidden', res.data.data.isHidden)
           wx.requestSubscribeMessage({
             tmplIds: ['oGUeI8FFPely9OFgNkukIKzlVQ7Ze8uiBQ5BIHCxLS0','HFb7VThCuI0TK8W38LR1oPTv8wL8dxzJKTeF11eUce4'],
             success (res) { 

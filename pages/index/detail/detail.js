@@ -5,12 +5,16 @@ Page({
     list:{},
     baseUrl:'',
     imageList:[],
-    oid:0
+    oid:0,
+    isHidden:0
+
   },
 
   onLoad:function(e) {
+    var isHidden = wx.getStorageSync('isHidden');
      this.setData({
-       oid:e.oid
+       oid:e.oid,
+       isHidden:isHidden
      })
   },
   onShow:function(){
@@ -18,12 +22,19 @@ Page({
     var baseUrl = app.globalData.baseUrl;
     var paras = {};
     paras.oId=that.data.oid;
+    paras.token=wx.getStorageSync('token');
     wx.request({
       url: baseUrl+"order/selectPenderDetail",
       method: 'get',
       data: paras,
       success(res) {
         if(res.data.code==200){
+          console.info(res)
+          if(res.data.msg=='1'){
+            wx.redirectTo({
+              url: '/pages/login/login',
+            })
+          }
           var data = res.data.data;
           var imageList = [];
           for(var idx in data){
@@ -54,6 +65,58 @@ Page({
       }
     })
   },
+  onPullDownRefresh:function(){
+    var that = this;
+    setTimeout(() => {
+      var baseUrl = app.globalData.baseUrl;
+      var paras = {};
+      paras.oId=that.data.oid;
+      paras.token=wx.getStorageSync('token');
+      wx.request({
+        url: baseUrl+"order/selectPenderDetail",
+        method: 'get',
+        data: paras,
+        success(res) {
+          if(res.data.code==200){
+            if(res.data.msg=='1'){
+              wx.redirectTo({
+                url: '/pages/login/login',
+              })
+            }
+            var data = res.data.data;
+            var imageList = [];
+            for(var idx in data){
+              var extra_img_url = data[idx].extra_img_url;
+              var image = {};
+              image.id=data[idx].id;
+              if(extra_img_url!=undefined && extra_img_url!=''){
+                image.urlList = extra_img_url.split('~');
+              }
+              imageList[imageList.length]=image;
+            }
+            that.setData({
+              list:data,
+              baseUrl:baseUrl,
+              imageList:imageList
+            })
+          }else{
+            wx.showToast({
+              icon:'none',
+              title: '服务器异常'
+            })
+          }
+          wx.stopPullDownRefresh();
+        },fail(res){
+          wx.showToast({
+            icon:'none',
+            title: '服务器异常'
+          })
+          wx.stopPullDownRefresh();
+        }
+      })
+    }, 1000);
+    
+  },
   changeExtra:function(e){
     var dis = e.currentTarget.dataset.dis;
     if(dis){
@@ -67,8 +130,13 @@ Page({
     var id = e.currentTarget.dataset.id;
     var flag = e.currentTarget.dataset.flag;
     var that = this;
+    var list = that.data.list;
+    if(list[0].extra_status==1){
+      return;
+    }
     var baseUrl = that.data.baseUrl;
     var param = {};
+    param.oid=list[0].o_id;
     param.id=id;
     param.isExtra=parseInt(flag);
     wx.request({
@@ -77,8 +145,31 @@ Page({
       data: param,
       success: function(res) {
         if(res.data.code==200){
-          that.onShow();
+          if(res.data.msg=='1'){
+            wx.showToast({
+              icon:'none',
+              title: '用户已支付差价，无法变更',
+              success:function(){
+                setTimeout(() => {
+                  that.onShow();
+                }, 1500);
+              }
+            })
+          }else{
+            that.onShow();
+          }
+        }else{
+          wx.showToast({
+            icon:'none',
+            title: '服务器异常'
+          })
         }
+      },
+      fail:function(res){
+        wx.showToast({
+          icon:'none',
+          title: '服务器异常'
+        })
       }
     })
   },
@@ -207,6 +298,7 @@ Page({
     for(var idx in list){
       if(list[idx].chargeback_status==1){
         wx.showToast({
+          icon:'none',
           title: "有退款申请未处理"
         })
         return;
@@ -227,6 +319,7 @@ Page({
             success: function(res) {
               if(res.data.code==200){
                 wx.showToast({
+                  icon:'none',
                   title: '操作成功，已通知用户，请尽快发货',
                   success:function(){
                     setTimeout(function () {
@@ -255,5 +348,11 @@ Page({
       }
     })
     
+  },
+  callPhone:function(e){
+    var phone = e.currentTarget.dataset.phone;
+    wx.makePhoneCall({
+      phoneNumber: phone
+    })
   }
 })

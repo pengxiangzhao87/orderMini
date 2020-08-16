@@ -1,9 +1,18 @@
 <!--pages/index/detail/detail.wxml-->
-<view style="margin-bottom:60px;" >
+<view class="item">
+  <view style="margin-left:10px;margin-top:5px;">{{list[0].consignee_range_time}}</view>
+  <view style="display:flex;flex-direction:row;align-items: center;font-weight: bolder;margin-top:5px;"  >
+    <view style="margin-left:10px;">{{list[0].consignee_name}}</view>
+    <view style="margin-left:5px;color:#1296db" catchtap="callPhone" data-phone="{{list[0].consignee_phone}}">{{list[0].consignee_phone}}</view>
+  </view>
+  <view style="margin-left:10px;margin-top:5px;margin-bottom:5px;color:#666666;font-size:12px;">{{list[0].consignee_address}}</view>
+</view>
+
+<view style="margin-bottom:60px;margin-top:10px;" >
   <view  wx:for="{{list}}" wx:for-index="idx" wx:key="oid" wx:for-item="item">
     <view class="item">
       <view class="row">
-        <view style="display: flex;  flex-direction: row;">
+        <view style="display: flex;  flex-direction: row;width:80%">
           <view style="width:48px;">商品：</view>
           <view style="margin-left:0;width:80%">{{item.sName}}</view>
         </view>
@@ -11,48 +20,54 @@
           <text bindtap="agree" data-id="{{item.id}}" hidden="{{item.chargeback_status==2}}">退款</text><text hidden="{{item.chargeback_status==1}}">已退款</text>
         </view>
       </view>
-      <view style="margin-left:10px;margin-top:5px;">数量：{{item.num}}</view>
-      <view style="margin-left:10px;margin-top:5px;">总计：￥{{item.payment_price}}</view>
-
-      <view class="row" style="margin-top:5px;margin-bottom:5px;justify-content: center;">
-        <view bindtap="changeExtra" data-id="{{item.id}}" data-flag="0" data-dis="{{item.chargeback_status==2}}" style="display:flex;height:20px;width:30%;align-items: center;">
-          <text style="height:20px;font-size:12px;">无差价</text>
-          <image style="width:16px;height:16px;margin-left:5px;" src="{{item.is_extra==0?'/image/zhifu_xuanz@3x.png':'/image/zhifu_weixuan@3x.png'}}">
-        </image>
-        </view>
-        <view bindtap="changeExtra" data-id="{{item.id}}" data-flag="1" data-dis="{{item.chargeback_status==2}}" style="display:flex;height:20px;width:30%;align-items: center;">
-          <text style="height:20px;font-size:12px;">退还</text>
-          <image style="width:16px;height:16px;margin-left:5px;" src="{{item.is_extra==1?'/image/zhifu_xuanz@3x.png':'/image/zhifu_weixuan@3x.png'}}"></image>
-        </view>
-        <view bindtap="changeExtra" data-id="{{item.id}}" data-flag="2" data-dis="{{item.chargeback_status==2}}" style="display:flex;height:20px;width:30%;align-items: center;">
-          <text style="height:20px;font-size:12px;">补差价</text>
-          <image style="width:16px;height:16px;margin-left:5px;" src="{{item.is_extra==2?'/image/zhifu_xuanz@3x.png':'/image/zhifu_weixuan@3x.png'}}"></image>
-        </view>  
+      <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;align-items:center;">
+        <view style="width:48px;">数量：</view>
+        <view style="color:red">{{item.num}}</view>
       </view>
+      <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;align-items:center;">
+        <view style="width:48px;">总计：</view>
+        <view style="color:red">￥{{item.payment_price}}</view>
+      </view>
+      <view hidden="{{isHidden==1}}">
+     
+        <view class="row" style="margin-top:5px;margin-bottom:5px;justify-content: center;">
+          <view bindtap="changeExtra" data-id="{{item.id}}" data-flag="0" data-dis="{{item.chargeback_status==2}}" style="display:flex;height:20px;width:30%;align-items: center;">
+            <text style="height:20px;font-size:12px;">无差价</text>
+            <image style="width:16px;height:16px;margin-left:5px;" src="{{item.is_extra==0?'/image/zhifu_xuanz@3x.png':'/image/zhifu_weixuan@3x.png'}}">
+          </image>
+          </view>
+          <view bindtap="changeExtra" data-id="{{item.id}}" data-flag="1" data-dis="{{item.chargeback_status==2}}" style="display:flex;height:20px;width:30%;align-items: center;">
+            <text style="height:20px;font-size:12px;">退还</text>
+            <image style="width:16px;height:16px;margin-left:5px;" src="{{item.is_extra==1?'/image/zhifu_xuanz@3x.png':'/image/zhifu_weixuan@3x.png'}}"></image>
+          </view>
+          <view bindtap="changeExtra" data-id="{{item.id}}" data-flag="2" data-dis="{{item.chargeback_status==2}}" style="display:flex;height:20px;width:30%;align-items: center;">
+            <text style="height:20px;font-size:12px;">补差价</text>
+            <image style="width:16px;height:16px;margin-left:5px;" src="{{item.is_extra==2?'/image/zhifu_xuanz@3x.png':'/image/zhifu_weixuan@3x.png'}}"></image>
+          </view>  
+        </view>
 
-      <view hidden="{{item.is_extra==0}}" >
-        <view class="item" style="display:flex;flex-direction:row;">
-          <view  wx:for="{{imageList}}" wx:for-index="idx" wx:key="oid" wx:for-item="detail">
-            <view wx:if="{{detail.id==item.id}}" style="display:flex;flex-direction:row;">
-              <view wx:for="{{detail.urlList}}"  wx:for-index="idx" wx:key="oid" wx:for-item="url">
-                <view style="height:100px;width:100px;position: relative;margin-right:10px;">
-                  <image style="height:15px;width:15px;top:0px;right:0px;display: flex;position: absolute;" bindtap="deletePic" data-id="{{detail.id}}" data-url="{{url}}" data-idx="{{idx}}" src="/image/delete.png"></image>
-                  <image style="height:100px;width:100px;" src="{{baseUrl}}upload/{{url}}"></image>
+        <view hidden="{{item.is_extra==0}}" >
+          <view class="item" style="display:flex;flex-direction:row;">
+            <view  wx:for="{{imageList}}" wx:for-index="idx" wx:key="oid" wx:for-item="detail">
+              <view wx:if="{{detail.id==item.id}}" style="display:flex;flex-direction:row;">
+                <view wx:for="{{detail.urlList}}"  wx:for-index="idx" wx:key="oid" wx:for-item="url">
+                  <view style="height:100px;width:100px;position: relative;margin-right:10px;">
+                    <image style="height:15px;width:15px;top:0px;right:0px;display: flex;position: absolute;" bindtap="deletePic" data-id="{{detail.id}}" data-url="{{url}}" data-idx="{{idx}}" src="/image/delete.png"></image>
+                    <image style="height:100px;width:100px;" src="{{baseUrl}}upload/{{url}}"></image>
+                  </view>
                 </view>
-              </view>
-              <view hidden="{{detail.urlList.length==3}}">
-                <view bindtap="uploadPic" data-id="{{item.id}}" style="height:100px;width:100px;border:0.5px solid #F5F5F5;display:flex;align-items: center;justify-content: center;">
-                  <image style="height:40px;width:40px;" src="/image/icon_add.png"></image>
+                <view hidden="{{detail.urlList.length==3}}">
+                  <view bindtap="uploadPic" data-id="{{item.id}}" style="height:100px;width:100px;border:0.5px solid #F5F5F5;display:flex;align-items: center;justify-content: center;">
+                    <image style="height:40px;width:40px;" src="/image/icon_add.png"></image>
+                  </view>
                 </view>
               </view>
             </view>
           </view>
         </view>
       </view>
-
     </view>
   </view>
  </view>
 
-  
-  <button class="page_bottom" style="color:white;width:90%;height:45px;margin-left:5%;" bindtap="sendGoods">确定发货</button> 
+<button class="page_bottom" style="color:white;width:90%;height:45px;margin-left:5%;" bindtap="sendGoods">{{list[0].extra_status==1?'（差价已支付）':''}}确定发货</button> 

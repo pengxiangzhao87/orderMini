@@ -40,6 +40,11 @@ Page({
       data: paras,
       success(res) {
         if(res.data.code==200){
+          if(res.data.msg=='1'){
+            wx.redirectTo({
+              url: '/pages/login/login',
+            })
+          }
           that.setData({
             orderList:res.data.data.list,
             totalPage:res.data.data.totalPage,

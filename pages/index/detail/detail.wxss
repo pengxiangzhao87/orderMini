@@ -9,7 +9,6 @@ page{
   border-radius: 10px;
   margin:5px 5px 0 5px;
   font-size:14px; 
-  height:100%;
   padding-top:5px;
   padding-bottom: 5px;
 }

@@ -5,10 +5,11 @@
     "pages/orderMng/orderMng"    
   ],
   "window":{
-    "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle":"black"
+    "navigationBarTextStyle":"black",
+    "backgroundTextStyle":"dark",
+    "enablePullDownRefresh":true
   },
   "tabBar": {
     "color":"#333333",
