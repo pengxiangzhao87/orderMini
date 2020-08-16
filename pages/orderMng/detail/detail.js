@@ -27,7 +27,6 @@ Page({
       method: 'get',
       data: paras,
       success(res) {
-        console.info(res)
         if(res.data.code==200){
           if(res.data.msg=='1'){
             wx.redirectTo({

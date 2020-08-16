@@ -47,7 +47,7 @@
         </view>
 
         <view hidden="{{item.is_extra==0}}" >
-          <view class="item" style="display:flex;flex-direction:row;">
+          <view class="item" style="display:flex; flex-direction:row;">
             <view  wx:for="{{imageList}}" wx:for-index="idx" wx:key="oid" wx:for-item="detail">
               <view wx:if="{{detail.id==item.id}}" style="display:flex;flex-direction:row;">
                 <view wx:for="{{detail.urlList}}"  wx:for-index="idx" wx:key="oid" wx:for-item="url">

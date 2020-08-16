@@ -19,7 +19,7 @@
           <text hidden="{{item.chargeback_status==2}}">退款</text><text hidden="{{item.chargeback_status==1}}">已退款</text>
         </view>
       </view>
-      <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;align-items:center;">
+      <view style="margin-left:10px;margin-top:5px; display:flex;flex-direction:row;align-items:center;">
         <view style="width:48px;">数量：</view>
         <view style="color:red">{{item.num}}</view>
       </view>
