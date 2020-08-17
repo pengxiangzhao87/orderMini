@@ -6,12 +6,14 @@ Page({
     baseUrl:'',
     imageList:[],
     oid:0,
-    isHidden:0
+    isHidden:0,
+
 
   },
 
   onLoad:function(e) {
     var isHidden = wx.getStorageSync('isHidden');
+    console.info(e.oid)
      this.setData({
        oid:e.oid,
        isHidden:isHidden
@@ -29,7 +31,6 @@ Page({
       data: paras,
       success(res) {
         if(res.data.code==200){
-          console.info(res)
           if(res.data.msg=='1'){
             wx.redirectTo({
               url: '/pages/login/login',
@@ -354,5 +355,17 @@ Page({
     wx.makePhoneCall({
       phoneNumber: phone
     })
+  },
+  saveWeight:function(e){
+    var value = e.detail.value;
+    console.info(value)
+    var id = e.currentTarget.dataset.id;
+    console.info(id)
+  },
+  savePrice:function(){
+    var value = e.detail.value;
+    console.info(value)
+    var id = e.currentTarget.dataset.id;
+    console.info(id)
   }
 })
