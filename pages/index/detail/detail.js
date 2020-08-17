@@ -6,9 +6,9 @@ Page({
     baseUrl:'',
     imageList:[],
     oid:0,
+    //0:田园鲜果，1：水晶进口
     isHidden:0,
-
-
+    isExtraBack:0
   },
 
   onLoad:function(e) {
@@ -38,10 +38,17 @@ Page({
           }
           var data = res.data.data;
           var imageList = [];
+          var isExtraBack = 0;
           for(var idx in data){
-            var extra_img_url = data[idx].extra_img_url;
+            var item = data[idx];
+            var extra_img_url = item.extra_img_url;
             var image = {};
-            image.id=data[idx].id;
+            image.id=item.id;
+            if(item.total_back_price!=undefined){
+              isExtraBack=1;
+            }else{
+              isExtraBack=0;
+            }
             if(extra_img_url!=undefined && extra_img_url!=''){
               image.urlList = extra_img_url.split('~');
             }
@@ -50,7 +57,8 @@ Page({
           that.setData({
             list:data,
             baseUrl:baseUrl,
-            imageList:imageList
+            imageList:imageList,
+            isExtraBack:isExtraBack
           })
         }else{
           wx.showToast({
@@ -358,14 +366,58 @@ Page({
   },
   saveWeight:function(e){
     var value = e.detail.value;
-    console.info(value)
     var id = e.currentTarget.dataset.id;
-    console.info(id)
+    var that = this;
+    var list = that.data.list;
+    var totalExtraPrice = parseFloat(0);
+    for(var idx in list){
+      var item = list[idx];
+      if(item.id==id){
+        item.extra_weight=value
+        isExtraBack=1;
+        break;
+      }
+    }
+    that.setData({
+      list:list
+    })
+    var baseUrl = that.data.baseUrl;
+    var param = {};
+    param.id=id;
+    param.value=value;
+    wx.request({
+      url: baseUrl+"order/updateExtraWeight",
+      method: 'get',
+      data: param,
+      success: function(res) {
+      }
+    })
   },
-  savePrice:function(){
+  savePrice:function(e){
     var value = e.detail.value;
-    console.info(value)
     var id = e.currentTarget.dataset.id;
-    console.info(id)
+    var that = this;
+    var list = that.data.list;
+    for(var idx in list){
+      var item = list[idx];
+      if(item.id==id){
+        item.extra_price=value
+        break;
+      }
+    }
+    that.setData({
+      list:list
+    })
+    var baseUrl = that.data.baseUrl;
+    var param = {};
+    param.id=id;
+    param.value=value;
+    wx.request({
+      url: baseUrl+"order/updateExtraPrice",
+      method: 'get',
+      data: param,
+      success: function(res) {
+      }
+    })
   }
 })

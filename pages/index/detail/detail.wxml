@@ -49,9 +49,9 @@
         <view class="row" hidden="{{item.is_extra==0}}">
           <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;align-items:center;font-size:12px;">
             <view >误差重量：</view>
-            <input bindblur="saveWeight" data-id="{{item.id}}" style="width:50px;border:0.5px solid #FF1907;border-radius:5px;height:12px;padding-left:5px;padding-right:5px;" type="digit"></input><text decode="true">&nbsp;克</text>
+            <input bindblur="saveWeight" data-id="{{item.id}}" style="width:50px;border:0.5px solid #FF1907;border-radius:5px;height:12px;padding-left:5px;padding-right:5px;" type="digit" value="{{item.extra_weight}}"></input><text decode="true">&nbsp;克</text>
             <view style="margin-left:20px;">价格：</view>
-            <input bindblur="savePrice" data-id="{{item.id}}" style="width:50px;border:0.5px solid #FF1907;border-radius:5px;height:12px;padding-left:5px;padding-right:5px;" type="digit"></input><text decode="true">&nbsp;元</text>
+            <input bindblur="savePrice" data-id="{{item.id}}" style="width:50px;border:0.5px solid #FF1907;border-radius:5px;height:12px;padding-left:5px;padding-right:5px;" type="digit" value="{{item.extra_price}}"></input><text decode="true">&nbsp;元</text>
           </view>
         </view>
 
@@ -80,7 +80,7 @@
  </view>
 
 <view class="page_bottom">
-  <view  class="btn_bottom" style="width:30%;" bindtap="sendGoods">{{list[0].extra_status==1?'差价退还':'已退还'}}</view> 
+  <view  class="btn_bottom" style="width:30%;" bindtap="sendGoods">{{isExtraBack==0?'差价退还':'已退还'}}</view> 
   <view  class="btn_bottom" style="width:60%;" bindtap="sendGoods">{{list[0].extra_status==1?'（差价已支付）':''}}确定发货</view> 
 </view>
 
