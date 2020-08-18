@@ -44,8 +44,18 @@
             <image style="width:16px;height:16px;margin-left:5px;" src="{{item.is_extra==2?'/image/zhifu_xuanz@3x.png':'/image/zhifu_weixuan@3x.png'}}"></image>
           </view>  
         </view>
-        <view hidden="{{extraList[idx].none}}" >
-          <view class="item" style="display:flex;flex-direction:row;">
+
+        <view class="row" hidden="{{item.is_extra==0}}">
+          <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;align-items:center;font-size:12px;">
+            <view >误差重量：</view>
+            <input bindblur="saveWeight" data-id="{{item.id}}" disabled="true" class="row_input" type="digit" value="{{item.extra_weight}}"></input><text decode="true">&nbsp;克</text>
+            <view style="margin-left:20px;">价格：</view>
+            <input bindblur="savePrice" data-id="{{item.id}}" disabled="true" class="row_input" type="digit" value="{{item.extra_price}}"></input><text decode="true">&nbsp;元</text>
+          </view>
+        </view>
+
+        <view hidden="{{imageList.size==0}}" >
+          <view class="item" style="display:flex; flex-direction:row;">
             <view  wx:for="{{imageList}}" wx:for-index="idx" wx:key="oid" wx:for-item="detail">
               <view wx:if="{{detail.id==item.id}}" style="display:flex;flex-direction:row;">
                 <view wx:for="{{detail.urlList}}"  wx:for-index="idx" wx:key="oid" wx:for-item="url">
@@ -58,6 +68,7 @@
           </view>
         </view>
       </view> 
+
     </view>
   </view>
  </view>

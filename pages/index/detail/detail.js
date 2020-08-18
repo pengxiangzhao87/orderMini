@@ -8,7 +8,9 @@ Page({
     oid:0,
     //0:田园鲜果，1：水晶进口
     isHidden:0,
-    isExtraBack:0
+    isExtraBack:0,
+    backPrice:0,
+    gray:true
   },
 
   onLoad:function(e) {
@@ -39,6 +41,8 @@ Page({
           var data = res.data.data;
           var imageList = [];
           var isExtraBack = 0;
+          var gray = true;
+          var backPrice = parseFloat(0);
           for(var idx in data){
             var item = data[idx];
             var extra_img_url = item.extra_img_url;
@@ -48,6 +52,12 @@ Page({
               isExtraBack=1;
             }else{
               isExtraBack=0;
+              if(item.is_extra==1){
+                gray=false;
+              }
+            }
+            if(item.is_extra==1){
+              backPrice += parseFloat(item.extra_price);
             }
             if(extra_img_url!=undefined && extra_img_url!=''){
               image.urlList = extra_img_url.split('~');
@@ -58,7 +68,9 @@ Page({
             list:data,
             baseUrl:baseUrl,
             imageList:imageList,
-            isExtraBack:isExtraBack
+            isExtraBack:isExtraBack,
+            backPrice:backPrice,
+            gray:gray
           })
         }else{
           wx.showToast({
@@ -94,10 +106,25 @@ Page({
             }
             var data = res.data.data;
             var imageList = [];
+            var isExtraBack = 0;
+            var gray = true;
+            var backPrice = parseFloat(0);
             for(var idx in data){
-              var extra_img_url = data[idx].extra_img_url;
+              var item = data[idx];
+              var extra_img_url = item.extra_img_url;
               var image = {};
-              image.id=data[idx].id;
+              image.id=item.id;
+              if(item.total_back_price!=undefined){
+                isExtraBack=1;
+              }else{
+                isExtraBack=0;
+                if(item.is_extra==1){
+                  gray=false;
+                }
+              }
+              if(item.is_extra==1){
+                backPrice += parseFloat(item.extra_price);
+              }
               if(extra_img_url!=undefined && extra_img_url!=''){
                 image.urlList = extra_img_url.split('~');
               }
@@ -106,7 +133,10 @@ Page({
             that.setData({
               list:data,
               baseUrl:baseUrl,
-              imageList:imageList
+              imageList:imageList,
+              isExtraBack:isExtraBack,
+              backPrice:backPrice,
+              gray:gray
             })
           }else{
             wx.showToast({
@@ -140,7 +170,7 @@ Page({
     var flag = e.currentTarget.dataset.flag;
     var that = this;
     var list = that.data.list;
-    if(list[0].extra_status==1){
+    if(list[0].extra_status==1 || list[0].total_back_price!=undefined){
       return;
     }
     var baseUrl = that.data.baseUrl;
@@ -312,6 +342,13 @@ Page({
         })
         return;
       }
+      if(list[idx].total_back_price==undefined && list[idx].is_extra==1){
+        wx.showToast({
+          icon:'none',
+          title: "有退还差价未处理"
+        })
+        return;
+      }
     }
     wx.showModal({
       content: '确定发货吗',
@@ -351,12 +388,56 @@ Page({
               })
             }
           });
-        } else if (res.cancel) {
-           
         }
       }
     })
     
+  },
+  toBackPrice:function(){
+    var that = this;
+    if(that.data.gray){
+      return;
+    }
+    wx.showModal({
+      content: '确定发货吗',
+      success (res) {
+        if (res.confirm) {
+          var param = {};
+          param.oid=that.data.oid;
+          param.value=that.data.backPrice;
+          wx.request({
+            url: baseUrl+"order/changeBackPrice",
+            method: 'get',
+            data: param,
+            success: function(res) {
+              if(res.data.code==200){
+                wx.showToast({
+                  icon:'none',
+                  title: '操作成功',
+                  success:function(){
+                    setTimeout(function () {
+                      that.onShow();
+                    }, 2000);
+                  }
+                })
+                
+              }else{
+                wx.showToast({
+                  title: "服务器异常"
+                })
+              }
+            },
+            fail: function(err) {
+              wx.showToast({
+                title: "服务器异常"
+              })
+            }
+          })
+        }
+      }
+    })
+
+   
   },
   callPhone:function(e){
     var phone = e.currentTarget.dataset.phone;
@@ -369,12 +450,10 @@ Page({
     var id = e.currentTarget.dataset.id;
     var that = this;
     var list = that.data.list;
-    var totalExtraPrice = parseFloat(0);
     for(var idx in list){
       var item = list[idx];
       if(item.id==id){
         item.extra_weight=value
-        isExtraBack=1;
         break;
       }
     }
@@ -398,15 +477,19 @@ Page({
     var id = e.currentTarget.dataset.id;
     var that = this;
     var list = that.data.list;
+    var backPrice = parseFloat(that.data.backPrice);
     for(var idx in list){
       var item = list[idx];
       if(item.id==id){
-        item.extra_price=value
+        backPrice -= parseFloat(item.extra_price);
+        item.extra_price=value;
         break;
       }
     }
+    backPrice += parseFloat(value);
     that.setData({
-      list:list
+      list:list,
+      backPrice:backPrice
     })
     var baseUrl = that.data.baseUrl;
     var param = {};
