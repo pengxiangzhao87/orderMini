@@ -13,30 +13,22 @@ Page({
     that.setData({
       baseUrl:baseUrl
     })
-    if(wx.getStorageSync('token')=='' || wx.getStorageSync('isLogin')=='' || wx.getStorageSync('isLogin')==0){
+    if(!wx.getStorageSync('token') || !wx.getStorageSync('isLogin') || wx.getStorageSync('isLogin')==0){
       that.userLogin(baseUrl);
     }else{
-      wx.request({
-        url: baseUrl+"supplier/checkToken",
-        method: 'get',
-        data: {token:wx.getStorageSync('token')},
-        success(res) {
-          var code = res.data.code;
-          if(code==200){
-            wx.switchTab({
-              url: '/pages/index/index'
-            })
-          }else{
-            that.userLogin(baseUrl);
-          }
-        },
-        fail(res) {
-          wx.showToast({
-            icon:'none',
-            title: '服务器异常'
+      wx.checkSession({
+        success: function(){
+          wx.switchTab({
+            url: '/pages/index/index'
           })
+        },
+        fail: function(){
+          //登录态过期
+          //重新登录
+          that.userLogin(baseUrl);
         }
       })
+      
     }
   },
   userLogin: function(baseUrl) {
