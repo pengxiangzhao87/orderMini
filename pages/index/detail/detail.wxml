@@ -17,7 +17,7 @@
           <view class="row-name">{{item.sName}}</view>
         </view>
         <view class="btn" hidden="{{item.chargeback_status==undefined}}">
-          <text bindtap="agree" data-id="{{item.id}}" hidden="{{item.chargeback_status==2}}">退款</text><text hidden="{{item.chargeback_status==1}}">已退款</text>
+          <text bindtap="agree" data-id="{{item.id}}"  data-oid="{{item.o_id}}" hidden="{{item.chargeback_status==2}}">退款</text><text hidden="{{item.chargeback_status==1}}">已退款</text>
         </view>
       </view>
       <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;align-items:center;">
@@ -62,7 +62,7 @@
                 <view wx:for="{{detail.urlList}}"  wx:for-index="idx" wx:key="oid" wx:for-item="url">
                   <view style="height:100px;width:100px;position: relative;margin-right:10px;">
                     <image style="height:15px;width:15px;top:0px;right:0px;position: absolute;" bindtap="deletePic" data-id="{{detail.id}}" data-url="{{url}}" data-idx="{{idx}}" hidden="{{list[0].extra_status==1 || list[0].total_back_price!=undefined}}" src="/image/delete.png"></image>
-                    <image style="height:100px;width:100px;" src="{{baseUrl}}upload/{{url}}"></image>
+                    <image style="height:100px;width:100px;" src="{{url}}"></image>
                   </view>
                 </view>
                 <view hidden="{{detail.urlList.length==3 || list[0].extra_status==1 || list[0].total_back_price!=undefined}}">

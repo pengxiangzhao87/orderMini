@@ -15,7 +15,6 @@ Page({
 
   onLoad:function(e) {
     var isHidden = wx.getStorageSync('isHidden');
-    console.info(e.oid)
      this.setData({
        oid:e.oid,
        isHidden:isHidden
@@ -293,6 +292,7 @@ Page({
   //退款
   agree:function(e){
     var id = e.currentTarget.dataset.id;
+    var oid = e.currentTarget.dataset.oid;
     var that = this;
     var baseUrl = that.data.baseUrl;
     wx.showModal({
@@ -300,7 +300,8 @@ Page({
       success (res) {
         if (res.confirm) {
           var param = {};
-          param.ids = id
+          param.id = id;
+          param.oId = oid;
           wx.request({
             url: baseUrl+"order/agreeRefundDetail",
             method: 'get',
