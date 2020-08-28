@@ -47,7 +47,8 @@ Page({
             var extra_img_url = item.extra_img_url;
             var image = {};
             image.id=item.id;
-            if(item.total_back_price!=undefined){
+            //商家是否退还差价
+            if(item.back_price_status!=undefined){
               isExtraBack=1;
             }else{
               isExtraBack=0;
@@ -63,6 +64,7 @@ Page({
             }
             imageList[imageList.length]=image;
           }
+          console.info(data)
           that.setData({
             list:data,
             baseUrl:baseUrl,
@@ -156,23 +158,18 @@ Page({
     
   },
   changeExtra:function(e){
-    var dis = e.currentTarget.dataset.dis;
-    if(dis){
-      wx.showToast({
-        icon:'none',
-        title: '已退款无法变更',
-        duration:1500
-      })
-      return;
-    }
-    var id = e.currentTarget.dataset.id;
     var flag = e.currentTarget.dataset.flag;
+    var id = e.currentTarget.dataset.id;
+    var idx = e.currentTarget.dataset.idx;
     var that = this;
-    var list = that.data.list;
-    if(list[0].extra_status==1 || list[0].total_back_price!=undefined){
-      return;
-    }
     var baseUrl = that.data.baseUrl;
+    var list = that.data.list;
+
+    var item = list[idx];
+    if(item.back_price_status!=undefined || (item.extra_status!=undefined && (item.is_extra==2 || flag==2)) || item.chargeback_status!=undefined){
+      return; 
+    }
+
     var param = {};
     param.oid=list[0].o_id;
     param.id=id;
@@ -307,6 +304,7 @@ Page({
             method: 'get',
             data: param,
             success: function(res) {
+              console.info(res)
               if(res.data.code==200){
                 that.onShow();
                 wx.showToast({
@@ -394,27 +392,30 @@ Page({
     })
     
   },
+  //返款
   toBackPrice:function(){
     var that = this;
+    var baseUrl = that.data.baseUrl;
     if(that.data.gray){
       return;
     }
     wx.showModal({
-      content: '确定发货吗',
+      content: '确定返还差价吗',
       success (res) {
         if (res.confirm) {
           var param = {};
-          param.oid=that.data.oid;
-          param.value=that.data.backPrice;
+          param.oId=that.data.oid;
+          param.backPrice=that.data.backPrice;
           wx.request({
             url: baseUrl+"order/changeBackPrice",
             method: 'get',
             data: param,
             success: function(res) {
               if(res.data.code==200){
+                var result = res.data.msg;
                 wx.showToast({
                   icon:'none',
-                  title: '操作成功',
+                  title: result,
                   success:function(){
                     setTimeout(function () {
                       that.onShow();

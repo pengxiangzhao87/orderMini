@@ -31,15 +31,6 @@ page{
   -webkit-box-orient: vertical;
 }
 
-.page_bottom{
-  width:100%;
-  position:fixed; 
-  bottom:10px;
-  display: flex;
-  align-items: center;
-  color:#333333;
-  font-weight: bolder;
-}
 
 .btn{
   margin-left:auto;
@@ -55,6 +46,14 @@ page{
   font-size:12px;
 }
 
+.page_bottom{
+  width:100%;
+  position:fixed; 
+  bottom:10px;
+  color:#333333;
+  font-weight: bolder;
+}
+
 
 .btn_bottom{
   display: flex;
@@ -68,12 +67,11 @@ page{
   border-radius: 4px;
 }
 
-
 .btn_bottom.gray{
   display: flex;
   align-items: center;
   justify-content: center;
-  color:white;
+  color:black;
   height:45px;
   margin-left:3%;
   background-color: #999999;
@@ -81,7 +79,73 @@ page{
   border-radius: 4px;
 }
 
-.row_input{
+.btn_bottom_back{
+  background-color: #FFD52E;
+  width:45%;
+  height:30px;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left:3%;
+}
+.btn_bottom_back.gray{
+  background-color: #999999;
+  width:45%;
+  height:30px;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left:3%;
+}
+
+.btn_bottom_pay{
+  color:#ffffff;
+  background-color: #FF1F1F;
+  margin-left:4%;
+  width:45%;
+  height:30px;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn_bottom_pay.gray{
+  color:black;
+  background-color: #999999;
+  margin-left:4%;
+  width:45%;
+  height:30px;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+
+.row_input_back{
+  width:50px;
+  border:0.5px solid #FFD52E;
+  border-radius:5px;
+  height:12px;
+  padding-left:5px;
+  padding-right:5px;
+}
+
+.row_input_back.gray{
+  width:50px;
+  border:0.5px solid #999999;
+  border-radius:5px;
+  height:12px;
+  padding-left:5px;
+  padding-right:5px;
+}
+
+
+
+.row_input_pay{
   width:50px;
   border:0.5px solid #FF1907;
   border-radius:5px;
@@ -90,7 +154,7 @@ page{
   padding-right:5px;
 }
 
-.row_input.gray{
+.row_input_pay.gray{
   width:50px;
   border:0.5px solid #999999;
   border-radius:5px;
