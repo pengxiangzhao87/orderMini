@@ -23,11 +23,7 @@ Page({
       data: paras,
       success(res) {
         if(res.data.code==200){
-          if(res.data.msg=='1'){
-            wx.redirectTo({
-              url: '/pages/login/login',
-            })
-          }
+          
           that.setData({
             orderList:res.data.data
           })
@@ -92,6 +88,13 @@ Page({
     var phone = e.currentTarget.dataset.phone;
     wx.makePhoneCall({
       phoneNumber: phone
+    })
+  },
+  copy:function(e){
+    var oid = e.currentTarget.dataset.oid+'';
+    wx.setClipboardData({
+      data: oid,
+      success (res) {}
     })
   }
 })

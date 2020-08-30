@@ -8,16 +8,23 @@ Page({
     oid:0,
     //0:田园鲜果，1：水晶进口
     isHidden:0,
-    isExtraBack:0,
     backPrice:0,
-    gray:true
+    backGray:true,
+    backHidden:false,
+    payPrice:0,
+    payGray:true,
+    payHidden:false,
+    rowWW:0
   },
 
   onLoad:function(e) {
     var isHidden = wx.getStorageSync('isHidden');
+    var ww = app.globalData.ww;
+    var rowWW = ww-30-100;
      this.setData({
        oid:e.oid,
-       isHidden:isHidden
+       isHidden:isHidden,
+       rowWW:rowWW
      })
   },
   onShow:function(){
@@ -39,39 +46,53 @@ Page({
           }
           var data = res.data.data;
           var imageList = [];
-          var isExtraBack = 0;
-          var gray = true;
+          var payPrice = parseFloat(0);
+          var payGray = false;
           var backPrice = parseFloat(0);
+          var backGray = false;
+          var backHidden = true;
+          var payHidden = true;
           for(var idx in data){
             var item = data[idx];
             var extra_img_url = item.extra_img_url;
             var image = {};
             image.id=item.id;
-            //商家是否退还差价
-            if(item.back_price_status!=undefined){
-              isExtraBack=1;
-            }else{
-              isExtraBack=0;
-              if(item.is_extra==1){
-                gray=false;
-              }
-            }
-            if(item.is_extra==1){
-              backPrice += parseFloat(item.extra_price);
-            }
             if(extra_img_url!=undefined && extra_img_url!=''){
               image.urlList = extra_img_url.split('~');
             }
             imageList[imageList.length]=image;
+            
+            if(item.is_extra==1){
+              item.weightTip = item.extra_weight==0 || item.extra_weight==undefined?false:true;
+              item.priceTip = item.extra_price==0 || item.extra_price==undefined?false:true;
+              //商家退还差价
+              backPrice += parseFloat(item.extra_price);
+              if(item.back_price_status!=undefined){
+                backGray=true;
+              }
+              backHidden=false;
+            }else if(item.is_extra==2){
+              item.weightTip = item.extra_weight==0 || item.extra_weight==undefined?false:true;
+              item.priceTip = item.extra_price==0 || item.extra_price==undefined?false:true;
+              //用户补差价
+              payPrice += parseFloat(item.extra_price);
+              if(item.extra_status!=undefined){
+                payGray=true;
+              }
+              payHidden=false;
+            }
           }
           console.info(data)
           that.setData({
             list:data,
             baseUrl:baseUrl,
             imageList:imageList,
-            isExtraBack:isExtraBack,
+            payPrice:payPrice,
+            payGray:payGray,
+            payHidden:payHidden,
             backPrice:backPrice,
-            gray:gray
+            backGray:backGray,
+            backHidden:backHidden
           })
         }else{
           wx.showToast({
@@ -107,37 +128,49 @@ Page({
             }
             var data = res.data.data;
             var imageList = [];
-            var isExtraBack = 0;
-            var gray = true;
+            var payPrice = parseFloat(0);
+            var payGray = false;
             var backPrice = parseFloat(0);
+            var backGray = false;
+            var backHidden = true;
+            var payHidden = true;
             for(var idx in data){
               var item = data[idx];
               var extra_img_url = item.extra_img_url;
               var image = {};
               image.id=item.id;
-              if(item.total_back_price!=undefined){
-                isExtraBack=1;
-              }else{
-                isExtraBack=0;
-                if(item.is_extra==1){
-                  gray=false;
-                }
-              }
-              if(item.is_extra==1){
-                backPrice += parseFloat(item.extra_price);
-              }
               if(extra_img_url!=undefined && extra_img_url!=''){
                 image.urlList = extra_img_url.split('~');
               }
               imageList[imageList.length]=image;
+              
+              if(item.is_extra==1){
+                //商家退还差价
+                backPrice += parseFloat(item.extra_price);
+                if(item.back_price_status!=undefined){
+                  backGray=true;
+                }
+                backHidden=false;
+              }else if(item.is_extra==2){
+                //用户补差价
+                payPrice += parseFloat(item.extra_price);
+                if(item.extra_status!=undefined){
+                  payGray=true;
+                }
+                payHidden=false;
+              }
             }
+            console.info(data)
             that.setData({
               list:data,
               baseUrl:baseUrl,
               imageList:imageList,
-              isExtraBack:isExtraBack,
+              payPrice:payPrice,
+              payGray:payGray,
+              payHidden:payHidden,
               backPrice:backPrice,
-              gray:gray
+              backGray:backGray,
+              backHidden:backHidden
             })
           }else{
             wx.showToast({
@@ -171,7 +204,6 @@ Page({
     }
 
     var param = {};
-    param.oid=list[0].o_id;
     param.id=id;
     param.isExtra=parseInt(flag);
     wx.request({
@@ -180,19 +212,7 @@ Page({
       data: param,
       success: function(res) {
         if(res.data.code==200){
-          if(res.data.msg=='1'){
-            wx.showToast({
-              icon:'none',
-              title: '用户已支付差价，无法变更',
-              success:function(){
-                setTimeout(() => {
-                  that.onShow();
-                }, 1500);
-              }
-            })
-          }else{
-            that.onShow();
-          }
+          that.onShow();
         }else{
           wx.showToast({
             icon:'none',
@@ -333,6 +353,17 @@ Page({
   sendGoods:function(){
     var that = this;
     var list = that.data.list;
+    var backPrice = that.data.backPrice;
+    var backGray = that.data.backGray;
+    var payPrice = that.data.payPrice;
+    var payGray = that.data.payGray;
+    if(backPrice!=0 && !backGray){
+      return;
+    }
+    var content = '确定发货吗';
+    if(payPrice!=0 && !payGray){
+      content = '用户还未支付差价，确定发货吗';
+    }
     for(var idx in list){
       if(list[idx].chargeback_status==1){
         wx.showToast({
@@ -341,16 +372,9 @@ Page({
         })
         return;
       }
-      if(list[idx].total_back_price==undefined && list[idx].is_extra==1){
-        wx.showToast({
-          icon:'none',
-          title: "有退还差价未处理"
-        })
-        return;
-      }
     }
     wx.showModal({
-      content: '确定发货吗',
+      content: content,
       success (res) {
         if (res.confirm) {
           var baseUrl = that.data.baseUrl;
@@ -363,18 +387,29 @@ Page({
             data: param,
             success: function(res) {
               if(res.data.code==200){
-                wx.showToast({
-                  icon:'none',
-                  title: '操作成功，已通知用户，请尽快发货',
-                  success:function(){
-                    setTimeout(function () {
-                      wx.switchTab({
-                        url: '/pages/index/index'
-                      })
-                    }, 2000);
-                  }
-                })
-                
+                if(res.data.msg=='1'){
+                  wx.showToast({
+                    icon:'none',
+                    title: "有退款申请未处理",
+                    success:function(){
+                      setTimeout(function () {
+                        that.onShow();
+                      }, 1500);
+                    }
+                  })
+                }else{
+                  wx.showToast({
+                    icon:'none',
+                    title: '操作成功，已通知用户，请尽快发货',
+                    success:function(){
+                      setTimeout(function () {
+                        wx.switchTab({
+                          url: '/pages/index/index'
+                        })
+                      }, 1500);
+                    }
+                  })
+                }
               }else{
                 wx.showToast({
                   title: "服务器异常"
@@ -396,8 +431,22 @@ Page({
   toBackPrice:function(){
     var that = this;
     var baseUrl = that.data.baseUrl;
-    if(that.data.gray){
+    var backGray = that.data.backGray;
+    var backPrice = that.data.backPrice;
+    if(backGray || backPrice==0){
       return;
+    }
+    var list = that.data.list;
+    for(var idx in list){
+      var item = list[idx];
+      if(item.weightTip || item.priceTip){
+        wx.showToast({
+          icon:'none',
+          title: '请完善退还信息',
+          duration:1500
+        })
+        return;
+      }
     }
     wx.showModal({
       content: '确定返还差价吗',
@@ -405,9 +454,9 @@ Page({
         if (res.confirm) {
           var param = {};
           param.oId=that.data.oid;
-          param.backPrice=that.data.backPrice;
+          param.backPrice=backPrice;
           wx.request({
-            url: baseUrl+"order/changeBackPrice",
+            url: baseUrl+"order/toBackPrice",
             method: 'get',
             data: param,
             success: function(res) {
@@ -438,8 +487,59 @@ Page({
         }
       }
     })
-
-   
+  },
+  toPayPrice:function(){
+    var that = this;
+    var baseUrl = that.data.baseUrl;
+    var payGray = that.data.payGray;
+    var payPrice = that.data.payPrice;
+    if(payGray || payPrice==0){
+      return;
+    }
+    var list = that.data.list;
+    for(var idx in list){
+      var item = list[idx];
+      if(item.weightTip || item.priceTip){
+        wx.showToast({
+          icon:'none',
+          title: '请完善补差价信息',
+          duration:1500
+        })
+        return;
+      }
+    }
+    wx.showModal({
+      content: '确定让用户补差价吗',
+      success (res) {
+        if (res.confirm) {
+          var param = {};
+          param.oId=that.data.oid;
+          param.payPrice=payPrice;
+          wx.request({
+            url: baseUrl+"order/sendPayPrice",
+            method: 'get',
+            data: param,
+            success: function(res) {
+              if(res.data.code==200){
+                wx.makePhoneCall({
+                  phoneNumber: that.data.list[0].consignee_phone
+                })
+                that.onShow();
+              }else{
+                wx.showToast({
+                  title: "服务器异常"
+                })
+              }
+            },
+            fail: function(err) {
+              wx.showToast({
+                title: "服务器异常"
+              })
+            }
+          })
+        }
+      }
+    })
   },
   callPhone:function(e){
     var phone = e.currentTarget.dataset.phone;
@@ -448,14 +548,16 @@ Page({
     })
   },
   saveWeight:function(e){
-    var value = e.detail.value;
+    var value = parseFloat(e.detail.value==''?0:e.detail.value).toFixed(2);
+    console.info(value)
     var id = e.currentTarget.dataset.id;
     var that = this;
     var list = that.data.list;
     for(var idx in list){
       var item = list[idx];
       if(item.id==id){
-        item.extra_weight=value
+        item.extra_weight=value;
+        item.weightTip=value==0?false:true;
         break;
       }
     }
@@ -475,7 +577,7 @@ Page({
     })
   },
   savePrice:function(e){
-    var value = e.detail.value;
+    var value = parseFloat(e.detail.value==''?0:e.detail.value).toFixed(2);
     var id = e.currentTarget.dataset.id;
     var that = this;
     var list = that.data.list;
@@ -485,6 +587,7 @@ Page({
       if(item.id==id){
         backPrice -= parseFloat(item.extra_price);
         item.extra_price=value;
+        item.priceTip=value==0?false:true;
         break;
       }
     }

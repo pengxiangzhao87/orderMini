@@ -11,47 +11,66 @@
 <view style="margin-bottom:200px;margin-top:10px;" >
   <view  wx:for="{{list}}" wx:for-index="idx" wx:key="oid" wx:for-item="item">
     <view class="item">
-      <view class="row">
-        <view style="display:flex;flex-direction:row;width:80%;">
-          <view style="width:48px;">商品：</view>
-          <view class="row-name">{{item.sName}}</view>
+      <view style="display:flex;flex-direction:row;">
+        <image src="{{item.coverUrl}}" style="width:100px;height:100px;" mode="aspectFit"></image>
+        <view>
+        <view class="row" style="width:{{rowWW}}px;">
+          <view style="display:flex;flex-direction:row;">
+            <view style="width:48px;">商品：</view>
+            <view class="row-name" style="width:{{rowWW-110}}px;">{{item.sName}}</view>
+          </view>
+          <view class="btn" hidden="{{item.chargeback_status==undefined}}">
+            <text bindtap="agree" data-id="{{item.id}}"  data-oid="{{item.o_id}}" hidden="{{item.chargeback_status==2}}">退款</text><text hidden="{{item.chargeback_status==1}}">已退款</text>
+          </view>
+          </view>
+          <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;align-items:center;">
+            <view style="width:48px;">数量：</view>
+            <view style="font-weight:bolder;">{{item.num}}</view>
+          </view>
+          <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;align-items:center;">
+            <view style="width:48px;">总计：</view>
+            <view style="font-weight:bolder;">￥{{item.payment_price}}</view>
+          </view>
         </view>
-        <view class="btn" hidden="{{item.chargeback_status==undefined}}">
-          <text bindtap="agree" data-id="{{item.id}}"  data-oid="{{item.o_id}}" hidden="{{item.chargeback_status==2}}">退款</text><text hidden="{{item.chargeback_status==1}}">已退款</text>
-        </view>
       </view>
-      <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;align-items:center;">
-        <view style="width:48px;">数量：</view>
-        <view style="font-weight:bolder;">{{item.num}}</view>
-      </view>
-      <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;align-items:center;">
-        <view style="width:48px;">总计：</view>
-        <view style="font-weight:bolder;">￥{{item.payment_price}}</view>
-      </view>
+      
       <view hidden="{{isHidden==1}}">
      
         <view class="row" style="margin-top:5px;margin-bottom:5px;justify-content: center;">
           <view bindtap="changeExtra" data-id="{{item.id}}" data-flag="0" data-idx="{{idx}}"  style="display:flex;height:20px;width:30%;align-items: center;">
-            <text style="height:20px;">无差价</text>
+            <text style="height:20px;color:{{item.extra_pay_status!=undefined || item.extra_back_status!=undefined?'#999999':'black'}};">无差价</text>
             <image style="width:16px;height:16px;margin-left:5px;" src="{{item.is_extra==0?'/image/none.png':'/image/zhifu_weixuan@3x.png'}}">
           </image>
           </view>
           <view bindtap="changeExtra" data-id="{{item.id}}" data-flag="1" data-idx="{{idx}}" style="display:flex;height:20px;width:30%;align-items: center;">
-            <text style="height:20px;">退还</text>
+            <text style="height:20px;color:{{(item.extra_pay_status!=undefined || item.extra_back_status!=undefined || item.back_price_status!=undefined ) && item.is_extra!=1?'#999999':'black'}};">退还</text>
             <image style="width:16px;height:16px;margin-left:5px;" src="{{item.is_extra==1?'/image/zhifu_xuanz@3x.png':'/image/zhifu_weixuan@3x.png'}}"></image>
           </view>
           <view bindtap="changeExtra" data-id="{{item.id}}" data-flag="2" data-idx="{{idx}}" style="display:flex;height:20px;width:30%;align-items: center;">
-            <text style="height:20px;">补差价</text>
+            <text style="height:20px;color:{{(item.extra_pay_status!=undefined || item.extra_back_status!=undefined || item.extra_status!=undefined ) && item.is_extra!=2?'#999999':'black'}};">补差价</text>
             <image style="width:16px;height:16px;margin-left:5px;" src="{{item.is_extra==2?'/image/red.png':'/image/zhifu_weixuan@3x.png'}}"></image>
           </view>  
         </view>
 
         <view class="row" hidden="{{item.is_extra==0}}">
-          <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;align-items:center;font-size:12px;">
-            <view >误差重量：</view>
-            <input bindblur="saveWeight" data-id="{{item.id}}" disabled="{{item.extra_status!=undefined && item.is_extra==2 || item.back_price_status!=undefined && item.is_extra==1}}" class="{{item.is_extra==1?(item.back_price_status!=undefined?'row_input_back gray':'row_input_back '):(item.extra_status!=undefined?'row_input_pay gray':'row_input_pay')}}" type="digit" value="{{item.extra_weight}}"></input><text decode="true">&nbsp;克</text>
-            <view style="margin-left:20px;">价格：</view>
-            <input bindblur="savePrice" data-id="{{item.id}}" disabled="{{item.extra_status!=undefined && item.is_extra==2 || item.back_price_status!=undefined && item.is_extra==1}}" class="{{item.is_extra==1?(item.back_price_status!=undefined?'row_input_back gray':'row_input_back '):(item.extra_status!=undefined?'row_input_pay gray':'row_input_pay')}}" type="digit" value="{{item.extra_price}}"></input><text decode="true">&nbsp;元</text>
+          <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;font-size:12px;">
+            <view style="height:20px;margin-top:0px;display:flex;align-items:center;">误差重量：</view>
+
+            <view>
+              <view style="display:flex;flex-direction:row;align-items:center;">
+                <input bindblur="saveWeight" data-id="{{item.id}}" disabled="{{item.extra_status!=undefined && item.is_extra==2 || item.back_price_status!=undefined && item.is_extra==1}}" class="{{item.is_extra==1?(item.back_price_status!=undefined?'row_input_back gray':'row_input_back '):(item.extra_status!=undefined?'row_input_pay gray':'row_input_pay')}}" type="digit" value="{{item.extra_weight}}"></input><text decode="true">&nbsp;克</text>
+              </view>
+              <view hidden="{{item.weightTip}}" style="color:#FF1F1F;font-size:10px;">请输入重量</view>
+            </view>
+            
+            <view style="margin-left:20px;height:20px;margin-top:0px;display:flex;align-items:center;">价格：</view>
+
+            <view>
+              <view style="display:flex;flex-direction:row;align-items:center;">
+                <input bindblur="savePrice" data-id="{{item.id}}" disabled="{{item.extra_status!=undefined && item.is_extra==2 || item.back_price_status!=undefined && item.is_extra==1}}" class="{{item.is_extra==1?(item.back_price_status!=undefined?'row_input_back gray':'row_input_back '):(item.extra_status!=undefined?'row_input_pay gray':'row_input_pay')}}" type="digit" value="{{item.extra_price}}"></input><text decode="true">&nbsp;元</text>
+                </view>
+              <view hidden="{{item.priceTip}}" style="color:#FF1F1F;font-size:10px;">请输入价格</view>
+            </view>
           </view>
         </view>
 
@@ -65,7 +84,7 @@
                     <image style="height:100px;width:100px;" src="{{url}}"></image>
                   </view>
                 </view>
-                <view hidden="{{detail.urlList.length==3 || list[0].extra_status==1 || list[0].total_back_price!=undefined}}">
+                <view hidden="{{detail.urlList.length==3 || item.extra_pay_status!=undefined || item.extra_back_status!=undefined}}">
                   <view bindtap="uploadPic" data-id="{{item.id}}" style="height:100px;width:100px;border:0.5px solid #F5F5F5;display:flex;align-items: center;justify-content: center;">
                     <image style="height:40px;width:40px;" src="/image/icon_add.png"></image>
                   </view>
@@ -80,10 +99,16 @@
  </view>
 
 <view class="page_bottom">
+
   <view style="display:flex; flex-direction: row ;width:94%;margin-left:3%;margin-bottom:10px;font-size:14px;">
-    <view  class="btn_bottom_back" bindtap="toBackPrice">{{isExtraBack==0?'待返还'+(backPrice==0?'':'￥'+backPrice):'已返还'+(backPrice==0?'':'￥'+backPrice)}}</view> 
-    <view class="btn_bottom_pay">待补差价</view>
+    <view style="margin-left:3%;width:45%;height:30px;" hidden="{{backPrice==0}}">
+      <view class="btn_bottom_back {{backGray || backPrice==0?'gray':''}}" bindtap="toBackPrice">{{list[0].backText+(backPrice==0?'':'￥'+backPrice)}}</view> 
+    </view>
+    <view style=" margin-right:3%;margin-left:auto;width:45%;height:30px;" hidden="{{payPrice==0}}">
+      <view class="btn_bottom_pay {{payGray || payPrice==0?'gray':''}}" bindtap="toPayPrice">{{list[0].payText+(payPrice==0?'':'￥'+payPrice)}}</view>
+    </view>
   </view>
-  <view  class="btn_bottom" style="width:94%;font-size:16px;" bindtap="sendGoods">确定发货</view> 
+
+  <view  class="btn_bottom {{backPrice!=0 && !backGray ?'gray':'' }}" style="width:94%;font-size:16px;" bindtap="sendGoods">确定发货</view> 
 </view>
 

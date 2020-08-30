@@ -7,10 +7,10 @@ page{
 .item{
   background-color: #FFFFFF;
   border-radius: 10px;
-  margin:5px 5px 0 5px;
+  margin:5px 10px 10px 10px;
   font-size:14px; 
-  padding-top:5px;
-  padding-bottom: 5px;
+  padding-top:10px;
+  padding-bottom: 2px;
 }
 .row{
   display: flex;  
@@ -21,7 +21,6 @@ page{
 
 .row-name{
   margin-left:0;
-  width:80%;
   height:40px;
   text-overflow: -o-ellipsis-lastline;
   overflow: hidden;
@@ -52,6 +51,7 @@ page{
   bottom:10px;
   color:#333333;
   font-weight: bolder;
+  z-index:1000;
 }
 
 
@@ -81,30 +81,26 @@ page{
 
 .btn_bottom_back{
   background-color: #FFD52E;
-  width:45%;
   height:30px;
   border-radius: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left:3%;
+  
 }
 .btn_bottom_back.gray{
   background-color: #999999;
-  width:45%;
   height:30px;
   border-radius: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left:3%;
+  
 }
 
 .btn_bottom_pay{
   color:#ffffff;
   background-color: #FF1F1F;
-  margin-left:4%;
-  width:45%;
   height:30px;
   border-radius: 40px;
   display: flex;
@@ -115,8 +111,6 @@ page{
 .btn_bottom_pay.gray{
   color:black;
   background-color: #999999;
-  margin-left:4%;
-  width:45%;
   height:30px;
   border-radius: 40px;
   display: flex;
