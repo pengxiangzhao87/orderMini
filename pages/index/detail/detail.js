@@ -120,6 +120,11 @@ Page({
         data: paras,
         success(res) {
           if(res.data.code==200){
+            if(res.data.msg=='1'){
+              wx.redirectTo({
+                url: '/pages/login/login',
+              })
+            }
             var data = res.data.data;
             var imageList = [];
             var payPrice = parseFloat(0);
@@ -139,6 +144,8 @@ Page({
               imageList[imageList.length]=image;
               
               if(item.is_extra==1){
+                item.weightTip = item.extra_weight==0 || item.extra_weight==undefined?false:true;
+                item.priceTip = item.extra_price==0 || item.extra_price==undefined?false:true;
                 //商家退还差价
                 backPrice += parseFloat(item.extra_price);
                 if(item.back_price_status!=undefined){
@@ -146,6 +153,8 @@ Page({
                 }
                 backHidden=false;
               }else if(item.is_extra==2){
+                item.weightTip = item.extra_weight==0 || item.extra_weight==undefined?false:true;
+                item.priceTip = item.extra_price==0 || item.extra_price==undefined?false:true;
                 //用户补差价
                 payPrice += parseFloat(item.extra_price);
                 if(item.extra_status!=undefined){
@@ -509,6 +518,7 @@ Page({
           var param = {};
           param.oId=that.data.oid;
           param.payPrice=payPrice;
+          param.orderTime = list[0].order_time;
           wx.request({
             url: baseUrl+"order/sendPayPrice",
             method: 'get',
