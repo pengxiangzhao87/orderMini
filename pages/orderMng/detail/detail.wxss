@@ -156,3 +156,11 @@ page{
   padding-left:5px;
   padding-right:5px;
 }
+
+.total_row{
+  display:flex;
+  flex-direction: row;
+  margin-left:10px;
+  margin-top:10px; 
+}
+

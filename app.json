@@ -2,7 +2,8 @@
   "pages":[
     "pages/login/login",
     "pages/index/index",
-    "pages/orderMng/orderMng"    
+    "pages/orderMng/orderMng",
+    "pages/send/send"    
   ],
   "window":{
     "navigationBarBackgroundColor": "#fff",
@@ -19,9 +20,13 @@
         "pagePath": "pages/index/index",
         "iconPath":"image/cl.png",
         "selectedIconPath":"image/cl_select.png",
-        "text": "待处理"
-      },
-      {
+        "text": "待发货"
+      },{
+        "pagePath": "pages/send/send",
+        "iconPath":"image/send.png",
+        "selectedIconPath":"image/send_select.png",
+        "text": "送货中"
+      },{
         "pagePath": "pages/orderMng/orderMng",
         "iconPath":"image/mng.png",
         "selectedIconPath":"image/mng_select.png",

@@ -43,7 +43,7 @@
           </image>
           </view>
           <view bindtap="changeExtra" data-id="{{item.id}}" data-flag="1" data-idx="{{idx}}" style="display:flex;height:20px;width:30%;align-items: center;">
-            <text style="height:20px;color:{{(item.extra_pay_status!=undefined || item.extra_back_status!=undefined || item.back_price_status!=undefined ) && item.is_extra!=1?'#999999':'black'}};">退还</text>
+            <text style="height:20px;color:{{(item.extra_pay_status!=undefined || item.extra_back_status!=undefined || item.back_price_status!=undefined ) && item.is_extra!=1?'#999999':'black'}};">返还</text>
             <image style="width:16px;height:16px;margin-left:5px;" src="{{item.is_extra==1?'/image/zhifu_xuanz@3x.png':'/image/zhifu_weixuan@3x.png'}}"></image>
           </view>
           <view bindtap="changeExtra" data-id="{{item.id}}" data-flag="2" data-idx="{{idx}}" style="display:flex;height:20px;width:30%;align-items: center;">
@@ -79,9 +79,9 @@
             <view  wx:for="{{imageList}}" wx:for-index="idx" wx:key="oid" wx:for-item="detail">
               <view wx:if="{{detail.id==item.id}}" style="display:flex;flex-direction:row;">
                 <view wx:for="{{detail.urlList}}"  wx:for-index="idx" wx:key="oid" wx:for-item="url">
-                  <view style="height:100px;width:100px;position: relative;margin-right:10px;">
+                  <view style="height:60px;width:60px;position: relative;margin-right:10px;">
                     <image style="height:15px;width:15px;top:0px;right:0px;position: absolute;" bindtap="deletePic" data-id="{{detail.id}}" data-url="{{url}}" data-idx="{{idx}}" hidden="{{list[0].extra_status==1 || list[0].total_back_price!=undefined}}" src="/image/delete.png"></image>
-                    <image style="height:100px;width:100px;" src="{{url}}"></image>
+                    <image style="height:60px;width:60px;" src="{{url}}"></image>
                   </view>
                 </view>
                 <view hidden="{{detail.urlList.length==3 || item.extra_pay_status!=undefined || item.extra_back_status!=undefined}}">

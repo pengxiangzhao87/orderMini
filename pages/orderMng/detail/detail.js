@@ -8,13 +8,14 @@ Page({
     oid:0,
     //0:田园鲜果，1：水晶进口
     isHidden:0,
-    backPrice:0,
-    backGray:true,
-    backHidden:false,
-    payPrice:0,
-    payGray:true,
-    payHidden:false,
-    rowWW:0
+    rowWW:0,
+    totalPay:0,
+    extraPay:0,
+    extraBack:0,
+    chargeback:0,
+    chargebackPay:0,
+    chargebackBack:0,
+    totalGet:0
   },
 
   onLoad:function(e) {
@@ -39,19 +40,14 @@ Page({
       data: paras,
       success(res) {
         if(res.data.code==200){
-          if(res.data.msg=='1'){
-            wx.redirectTo({
-              url: '/pages/login/login',
-            })
-          }
           var data = res.data.data;
           var imageList = [];
-          var payPrice = parseFloat(0);
-          var payGray = false;
-          var backPrice = parseFloat(0);
-          var backGray = false;
-          var backHidden = true;
-          var payHidden = true;
+          var totalPay = parseFloat(data[0].total_price);
+          var extraPay = parseFloat(data[0].extra_status!=undefined?data[0].extra_payment:0);
+          var extraBack = parseFloat(data[0].back_price_status!=undefined?data[0].total_back_price:0);
+          var chargeback = parseFloat(0);
+          var chargebackPay = parseFloat(0);
+          var chargebackBack = parseFloat(0);
           for(var idx in data){
             var item = data[idx];
             var extra_img_url = item.extra_img_url;
@@ -61,37 +57,41 @@ Page({
               image.urlList = extra_img_url.split('~');
             }
             imageList[imageList.length]=image;
-            
-            if(item.is_extra==1){
-              item.weightTip = item.extra_weight==0 || item.extra_weight==undefined?false:true;
-              item.priceTip = item.extra_price==0 || item.extra_price==undefined?false:true;
-              //商家退还差价
-              backPrice += parseFloat(item.extra_price);
-              if(item.back_price_status!=undefined){
-                backGray=true;
+            //二次支付
+            if(item.is_extra==2 && item.extra_pay_back_status!=undefined){
+              chargebackPay += parseFloat(item.extra_price);
+            }
+            //商户返还差价
+            if(item.is_extra==1 && item.back_price_status!=undefined ){
+              extraBack += parseFloat(item.extra_price);
+            }
+            if(item.chargeback_status!=undefined){
+              //退款
+              chargeback += parseFloat(item.payment_price);
+              //补回商家返的差价
+              if(item.is_extra==1 && item.back_price_status!=undefined ){
+                chargebackBack += parseFloat(item.extra_price);
               }
-              backHidden=false;
-            }else if(item.is_extra==2){
-              item.weightTip = item.extra_weight==0 || item.extra_weight==undefined?false:true;
-              item.priceTip = item.extra_price==0 || item.extra_price==undefined?false:true;
-              //用户补差价
-              payPrice += parseFloat(item.extra_price);
-              if(item.extra_status!=undefined){
-                payGray=true;
-              }
-              payHidden=false;
             }
           }
+          var totalGet =(totalPay+extraPay-extraBack-chargeback-chargebackPay+chargebackBack).toFixed(2);
+          totalPay = totalPay.toFixed(2);
+          extraPay = extraPay.toFixed(2);
+          extraBack = extraBack.toFixed(2);
+          chargeback = chargeback.toFixed(2);
+          chargebackPay = chargebackPay.toFixed(2);
+          chargebackBack = chargebackBack.toFixed(2);
           that.setData({
             list:data,
             baseUrl:baseUrl,
             imageList:imageList,
-            payPrice:payPrice,
-            payGray:payGray,
-            payHidden:payHidden,
-            backPrice:backPrice,
-            backGray:backGray,
-            backHidden:backHidden
+            totalPay:totalPay,
+            extraPay:extraPay,
+            extraBack:extraBack,
+            chargeback:chargeback,
+            chargebackPay:chargebackPay,
+            chargebackBack:chargebackBack,
+            totalGet:totalGet
           })
         }else{
           wx.showToast({
@@ -111,6 +111,13 @@ Page({
     var phone = e.currentTarget.dataset.phone;
     wx.makePhoneCall({
       phoneNumber: phone
+    })
+  },
+  copy:function(e){
+    var oid = e.currentTarget.dataset.oid+'';
+    wx.setClipboardData({
+      data: oid,
+      success (res) {}
     })
   } 
 })

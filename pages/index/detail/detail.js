@@ -82,7 +82,6 @@ Page({
               payHidden=false;
             }
           }
-          console.info(data)
           that.setData({
             list:data,
             baseUrl:baseUrl,
@@ -121,11 +120,6 @@ Page({
         data: paras,
         success(res) {
           if(res.data.code==200){
-            if(res.data.msg=='1'){
-              wx.redirectTo({
-                url: '/pages/login/login',
-              })
-            }
             var data = res.data.data;
             var imageList = [];
             var payPrice = parseFloat(0);
@@ -160,7 +154,6 @@ Page({
                 payHidden=false;
               }
             }
-            console.info(data)
             that.setData({
               list:data,
               baseUrl:baseUrl,
@@ -324,7 +317,6 @@ Page({
             method: 'get',
             data: param,
             success: function(res) {
-              console.info(res)
               if(res.data.code==200){
                 that.onShow();
                 wx.showToast({
@@ -499,13 +491,15 @@ Page({
     var list = that.data.list;
     for(var idx in list){
       var item = list[idx];
-      if(item.weightTip || item.priceTip){
-        wx.showToast({
-          icon:'none',
-          title: '请完善补差价信息',
-          duration:1500
-        })
-        return;
+      if(item.is_extra==2){
+        if(!item.weightTip || !item.priceTip){
+          wx.showToast({
+            icon:'none',
+            title: '请完善补差价信息',
+            duration:1500
+          })
+          return;
+        }
       }
     }
     wx.showModal({
@@ -549,7 +543,6 @@ Page({
   },
   saveWeight:function(e){
     var value = parseFloat(e.detail.value==''?0:e.detail.value).toFixed(2);
-    console.info(value)
     var id = e.currentTarget.dataset.id;
     var that = this;
     var list = that.data.list;

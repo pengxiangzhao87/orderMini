@@ -1,7 +1,7 @@
-//index.js
-//获取应用实例
+// pages/send/send.js
 var app = getApp()
 Page({
+
   data: {
     orderList:[]
   },
@@ -16,7 +16,7 @@ Page({
     var that = this;
     var baseUrl = that.data.baseUrl;
     var paras= {};
-    paras.status=1;
+    paras.status=2;
     paras.token=wx.getStorageSync('token');
     wx.request({
       url: baseUrl+"order/selectPendOrder",
@@ -45,7 +45,7 @@ Page({
   toDetail:function(e){
     var oid = e.currentTarget.dataset.oid;
     wx.navigateTo({
-      url: '/pages/index/detail/detail?oid='+oid,
+      url: '/pages/orderMng/detail/detail?oid='+oid,
     })
   },
   onPullDownRefresh:function(){
@@ -53,7 +53,7 @@ Page({
     setTimeout(() => {
       var baseUrl = that.data.baseUrl;
       var paras= {};
-      paras.status=1;
+      paras.status=2;
       paras.token=wx.getStorageSync('token');
       wx.request({
         url: baseUrl+"order/selectPendOrder",
@@ -97,6 +97,30 @@ Page({
     wx.setClipboardData({
       data: oid,
       success (res) {}
+    })
+  },
+  confirmSend:function(e){
+    var oid = e.currentTarget.dataset.oid;
+    var that = this;
+    var paras = {};
+    paras.oId = oid;
+    wx.request({
+      url: baseUrl+"order/confirmSend",
+      method: 'get',
+      data: paras,
+      success(res) {
+        wx.showToast({
+          icon:'none',
+          title: '已确认送达',
+          duration:1500
+        })
+        that.onShow();
+      },fail(){
+        wx.showToast({
+          icon:'none',
+          title: '服务器异常'
+        })
+      }
     })
   }
 })
