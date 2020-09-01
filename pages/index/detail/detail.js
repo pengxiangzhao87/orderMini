@@ -438,21 +438,25 @@ Page({
       return;
     }
     var list = that.data.list;
+    console.info(list)
     for(var idx in list){
       var item = list[idx];
-      if(item.weightTip || item.priceTip){
+      if(item.is_extra==1 && (!item.weightTip || !item.priceTip) ){
         wx.showToast({
           icon:'none',
-          title: '请完善退还信息',
+          title: '请完善退回信息',
           duration:1500
         })
         return;
       }
     }
     wx.showModal({
-      content: '确定返还差价吗',
+      content: '确定退回差价吗',
       success (res) {
         if (res.confirm) {
+          wx.showLoading({
+            title: '退款中...',
+          })
           var param = {};
           param.oId=that.data.oid;
           param.backPrice=backPrice;
@@ -461,6 +465,9 @@ Page({
             method: 'get',
             data: param,
             success: function(res) {
+              wx.hideLoading({
+                complete: (res) => {},
+              })
               if(res.data.code==200){
                 var result = res.data.msg;
                 wx.showToast({
@@ -480,6 +487,9 @@ Page({
               }
             },
             fail: function(err) {
+              wx.hideLoading({
+                complete: (res) => {},
+              })
               wx.showToast({
                 title: "服务器异常"
               })
