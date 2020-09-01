@@ -17,7 +17,7 @@ Page({
     var baseUrl = that.data.baseUrl;
     var paras= {};
     paras.status=2;
-    paras.token=wx.getStorageSync('token');
+    paras.sId=wx.getStorageSync('sId');
     wx.request({
       url: baseUrl+"order/selectPendOrder",
       method: 'get',
@@ -54,7 +54,7 @@ Page({
       var baseUrl = that.data.baseUrl;
       var paras= {};
       paras.status=2;
-      paras.token=wx.getStorageSync('token');
+      paras.sId=wx.getStorageSync('sId');
       wx.request({
         url: baseUrl+"order/selectPendOrder",
         method: 'get',

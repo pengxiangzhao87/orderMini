@@ -2,7 +2,7 @@
 App({
   globalData:{
     //baseUrl:"https://www.sotardust.cn/CMTGP/",
-    baseUrl:"http://192.168.1.4:9000/CMTGP/",
+    baseUrl:"http://192.168.1.142:9000/CMTGP/",
     ww:0,
     hh:0,
   },
@@ -19,5 +19,39 @@ App({
       }
     })
   },
+  onShow:function(){
+    var that = this;
+    var token = wx.getStorageSync('token');
+    if(token!=''){
+      console.info('token',token)
+      wx.request({
+        url: that.globalData.baseUrl+"mini/checkToken",
+        method: 'get',
+        data: {token:wx.getStorageSync('token')},
+        success(res) {
+          if(res.data.code!=200){
+            wx.login({
+              success: (res) => {
+                var paras = {};
+                paras.code = res.code;
+                paras.type=2;
+                wx.request({
+                  url: that.globalData.baseUrl+"supplier/getOpendId",
+                  method: 'get',
+                  data: paras,
+                  success(res) {
+                    if(res.data.code==200){
+                      wx.setStorageSync('token', res.data.data.token);
+                    }
+                  }
+                })
+              }
+            })
+          }
+        }
+      })
+    }
+    
+  }
    
 })

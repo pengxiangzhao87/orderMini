@@ -13,22 +13,12 @@ Page({
     that.setData({
       baseUrl:baseUrl
     })
-    if(!wx.getStorageSync('token') || !wx.getStorageSync('isLogin') || wx.getStorageSync('isLogin')==0){
+    if(!wx.getStorageSync('sId')){
       that.userLogin(baseUrl);
     }else{
-      wx.checkSession({
-        success: function(){
-          wx.switchTab({
-            url: '/pages/index/index'
-          })
-        },
-        fail: function(){
-          //登录态过期
-          //重新登录
-          that.userLogin(baseUrl);
-        }
+      wx.switchTab({
+        url: '/pages/index/index'
       })
-      
     }
   },
   userLogin: function(baseUrl) {
@@ -45,9 +35,9 @@ Page({
             if(res.data.code==200){
               var data = res.data.data;
               wx.setStorageSync('token', data.token);
-              wx.setStorageSync('isLogin', data.isLogin);
               wx.setStorageSync('isHidden', data.isHidden)
-              if(data.isLogin==1){
+              if(data.sId!=undefined){
+                wx.setStorageSync('sId', data.sId);
                 wx.switchTab({
                   url: '/pages/index/index',
                 })
@@ -83,16 +73,8 @@ Page({
       data: paras,
       success(res) {
         if(res.data.code==200){
-          wx.setStorageSync('isLogin', 1)
-          wx.setStorageSync('isHidden', res.data.data.isHidden)
-          wx.requestSubscribeMessage({
-            tmplIds: ['oGUeI8FFPely9OFgNkukIKzlVQ7Ze8uiBQ5BIHCxLS0','HFb7VThCuI0TK8W38LR1oPTv8wL8dxzJKTeF11eUce4'],
-            success (res) { 
-              if(res['oGUeI8FFPely9OFgNkukIKzlVQ7Ze8uiBQ5BIHCxLS0-ZwAFL-b3kALcl0c']=='accept' && res['HFb7VThCuI0TK8W38LR1oPTv8wL8dxzJKTeF11eUce4']=='accept'){
-                
-              }
-            }
-          })
+          wx.setStorageSync('sId', res.data.data.sId);
+          wx.setStorageSync('isHidden', res.data.data.isHidden);
           wx.switchTab({
             url: '/pages/index/index'
           })
@@ -103,7 +85,6 @@ Page({
         }
        
       },fail(res){
-        console.info(res)
         wx.showToast({
           title: "服务器异常"
         })

@@ -26,7 +26,7 @@ Page({
       endDate:nowDate
     })
     var paras = {};
-    paras.token=wx.getStorageSync('token');
+    paras.sId=wx.getStorageSync('sId');
     paras.startDate='2020-01-01';
     paras.endDate=nowDate;
     paras.pageNo=1;
@@ -40,11 +40,6 @@ Page({
       data: paras,
       success(res) {
         if(res.data.code==200){
-          if(res.data.msg=='1'){
-            wx.redirectTo({
-              url: '/pages/login/login',
-            })
-          }
           that.setData({
             orderList:res.data.data.list,
             totalPage:res.data.data.totalPage,
@@ -110,7 +105,7 @@ Page({
     var that = this;
     var baseUrl = that.data.baseUrl;
     var paras = {};
-    paras.token=wx.getStorageSync('token');
+    paras.sId=wx.getStorageSync('sId');
     paras.startDate=e.detail.value.startDate;
     paras.endDate=e.detail.value.endDate;
     paras.sName = e.detail.value.name;

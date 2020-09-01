@@ -32,7 +32,7 @@ Page({
     var baseUrl = app.globalData.baseUrl;
     var paras = {};
     paras.oId=that.data.oid;
-    paras.token=wx.getStorageSync('token');
+    paras.sId=wx.getStorageSync('sId');
     wx.request({
       url: baseUrl+"order/selectPenderDetail",
       method: 'get',
@@ -113,7 +113,7 @@ Page({
       var baseUrl = app.globalData.baseUrl;
       var paras = {};
       paras.oId=that.data.oid;
-      paras.token=wx.getStorageSync('token');
+      paras.sId=wx.getStorageSync('sId');
       wx.request({
         url: baseUrl+"order/selectPenderDetail",
         method: 'get',
