@@ -20,15 +20,16 @@ Page({
     var baseUrl = that.data.baseUrl;
     var now = new Date();
     var month = now.getMonth()+1;
-    var nowDate = now.getFullYear() + '-' + (month<10?'0'+month:month) + '-' + now.getDate();
+    var day = now.getDate();
+    var nowDate = now.getFullYear() + '-' + (month<10?'0'+month:month) + '-' + (day<10?'0'+day:day);
     that.setData({
-      startDate:'2020-01-01',
+      startDate:nowDate,
       endDate:nowDate
     })
     var paras = {};
     paras.sId=wx.getStorageSync('sId');
-    paras.startDate='2020-01-01';
-    paras.endDate=nowDate;
+    paras.startDate=nowDate + ' 00:00:00';
+    paras.endDate=nowDate + ' 23:59:59';
     paras.pageNo=1;
     paras.pageSize=20;
     that.getOrderList(that,baseUrl,paras);
@@ -106,8 +107,8 @@ Page({
     var baseUrl = that.data.baseUrl;
     var paras = {};
     paras.sId=wx.getStorageSync('sId');
-    paras.startDate=e.detail.value.startDate;
-    paras.endDate=e.detail.value.endDate;
+    paras.startDate=e.detail.value.startDate+ ' 00:00:00';
+    paras.endDate=e.detail.value.endDate+' 23:59:59';
     paras.sName = e.detail.value.name;
     paras.pageNo =1;
     paras.pageSize=20;

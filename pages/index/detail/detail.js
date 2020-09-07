@@ -327,17 +327,14 @@ Page({
             data: param,
             success: function(res) {
               if(res.data.code==200){
+                var msg = res.data.msg;
                 that.onShow();
                 wx.showToast({
-                  title: '操作成功',
-                  duration:1000
+                  title: msg,
+                  duration:1500
                 })
                 
-              }else{
-                wx.showToast({
-                  title: "服务器异常"
-                })
-              }
+              } 
             },
             fail: function(err) {
               wx.showToast({
@@ -354,6 +351,9 @@ Page({
   sendGoods:function(){
     var that = this;
     var list = that.data.list;
+    if(list[0].order_status==3){
+      return;
+    }
     var backPrice = that.data.backPrice;
     var backGray = that.data.backGray;
     var payPrice = that.data.payPrice;
@@ -565,18 +565,6 @@ Page({
     var value = parseFloat(e.detail.value==''?0:e.detail.value).toFixed(2);
     var id = e.currentTarget.dataset.id;
     var that = this;
-    var list = that.data.list;
-    for(var idx in list){
-      var item = list[idx];
-      if(item.id==id){
-        item.extra_weight=value;
-        item.weightTip=value==0?false:true;
-        break;
-      }
-    }
-    that.setData({
-      list:list
-    })
     var baseUrl = that.data.baseUrl;
     var param = {};
     param.id=id;
@@ -586,6 +574,7 @@ Page({
       method: 'get',
       data: param,
       success: function(res) {
+        that.onShow();
       }
     })
   },
@@ -593,22 +582,6 @@ Page({
     var value = parseFloat(e.detail.value==''?0:e.detail.value).toFixed(2);
     var id = e.currentTarget.dataset.id;
     var that = this;
-    var list = that.data.list;
-    var backPrice = parseFloat(that.data.backPrice);
-    for(var idx in list){
-      var item = list[idx];
-      if(item.id==id){
-        backPrice -= parseFloat(item.extra_price);
-        item.extra_price=value;
-        item.priceTip=value==0?false:true;
-        break;
-      }
-    }
-    backPrice += parseFloat(value);
-    that.setData({
-      list:list,
-      backPrice:backPrice
-    })
     var baseUrl = that.data.baseUrl;
     var param = {};
     param.id=id;
@@ -618,6 +591,7 @@ Page({
       method: 'get',
       data: param,
       success: function(res) {
+        that.onShow();
       }
     })
   }

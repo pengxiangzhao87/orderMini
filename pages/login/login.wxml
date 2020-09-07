@@ -3,7 +3,7 @@
   <image style="height:100px;width:100px;border-radius:20px;margin-top:15%;" src="/image/logo.png"></image>
 </view>
 
-<view style="display:flex;justify-content: center;font-size:14px;margin-top:20px;">食朝夕商户版</view>
+<view style="display:flex;justify-content: center;font-size:14px;margin-top:20px;">食朝夕商家版</view>
 
 <form bindsubmit="login" style="display:flex;justify-content: center;width:100%;margin-top:10px;">
   <view>

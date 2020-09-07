@@ -24,7 +24,6 @@ Page({
       data: paras,
       success(res) {
         if(res.data.code==200){
-          
           that.setData({
             orderList:res.data.data
           })

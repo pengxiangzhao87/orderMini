@@ -101,14 +101,14 @@
 <view class="page_bottom">
 
   <view style="display:flex; flex-direction: row ;width:94%;margin-left:3%;margin-bottom:10px;font-size:14px;">
-    <view style="margin-left:3%;width:45%;height:30px;" hidden="{{backPrice==0}}">
+    <view style="margin-left:3%;width:45%;height:30px;" hidden="{{backHidden}}">
       <view class="btn_bottom_back {{backGray || backPrice==0?'gray':''}}" bindtap="toBackPrice">{{list[0].backText+(backPrice==0?'':'￥'+backPrice)}}</view> 
     </view>
-    <view style=" margin-right:3%;margin-left:auto;width:45%;height:30px;" hidden="{{payPrice==0}}">
+    <view style=" margin-right:3%;margin-left:auto;width:45%;height:30px;" hidden="{{payHidden}}">
       <view class="btn_bottom_pay {{payGray || payPrice==0?'gray':''}}" bindtap="toPayPrice">{{list[0].payText+(payPrice==0?'':'￥'+payPrice)}}</view>
     </view>
   </view>
 
-  <view  class="btn_bottom {{backPrice!=0 && !backGray ?'gray':'' }}" style="width:94%;font-size:16px;" bindtap="sendGoods">确定发货</view> 
+  <view  class="btn_bottom {{backPrice!=0 && !backGray || list[0].order_status==3?'gray':'' }}" style="width:94%;font-size:16px;" bindtap="sendGoods">{{list[0].order_status==3?'已送达':'确定发货'}}</view> 
 </view>
 
