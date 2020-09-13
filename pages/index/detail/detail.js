@@ -14,7 +14,8 @@ Page({
     payPrice:0,
     payGray:true,
     payHidden:false,
-    rowWW:0
+    rowWW:0,
+    closeOrder:false
   },
 
   onLoad:function(e) {
@@ -52,11 +53,17 @@ Page({
           var backGray = false;
           var backHidden = true;
           var payHidden = true;
+          var closeOrder = true;
           for(var idx in data){
             var item = data[idx];
             var extra_img_url = item.extra_img_url;
             var image = {};
             image.id=item.id;
+            if(item.orderStatus!='已送达'){
+              if(item.chargeback_status==undefined){
+                closeOrder = false;
+              }
+            }
             if(extra_img_url!=undefined && extra_img_url!=''){
               image.urlList = extra_img_url.split('~');
             }
@@ -91,7 +98,8 @@ Page({
             payHidden:payHidden,
             backPrice:backPrice,
             backGray:backGray,
-            backHidden:backHidden
+            backHidden:backHidden,
+            closeOrder:closeOrder
           })
         }else{
           wx.showToast({
@@ -133,11 +141,17 @@ Page({
             var backGray = false;
             var backHidden = true;
             var payHidden = true;
+            var closeOrder = true;
             for(var idx in data){
               var item = data[idx];
               var extra_img_url = item.extra_img_url;
               var image = {};
               image.id=item.id;
+              if(item.orderStatus!='已送达'){
+                if(item.chargeback_status==undefined){
+                  closeOrder = false;
+                }
+              }
               if(extra_img_url!=undefined && extra_img_url!=''){
                 image.urlList = extra_img_url.split('~');
               }
@@ -172,7 +186,8 @@ Page({
               payHidden:payHidden,
               backPrice:backPrice,
               backGray:backGray,
-              backHidden:backHidden
+              backHidden:backHidden,
+              closeOrder:closeOrder
             })
           }else{
             wx.showToast({
@@ -180,13 +195,11 @@ Page({
               title: '服务器异常'
             })
           }
-          wx.stopPullDownRefresh();
         },fail(res){
           wx.showToast({
             icon:'none',
             title: '服务器异常'
           })
-          wx.stopPullDownRefresh();
         }
       })
     }, 1000);
@@ -201,7 +214,8 @@ Page({
     var list = that.data.list;
 
     var item = list[idx];
-    if(item.back_price_status!=undefined || (item.extra_status!=undefined && (item.is_extra==2 || flag==2)) || item.chargeback_status!=undefined){
+
+    if((item.back_price_status!=undefined && (item.is_extra==1 || flag==1)) || item.chargeback_status!=undefined){
       return; 
     }
 
@@ -241,7 +255,7 @@ Page({
       success: function (res) {
         var tempFilePaths = res.tempFilePaths;
         wx.showLoading({
-          title: '上传中',
+          title: '上传中...',
         })
         var promise = Promise.all(tempFilePaths.map((tempFilePath, index) => {
             return new Promise(function(resolve, reject) {
@@ -262,11 +276,11 @@ Page({
             });
         }));
         promise.then(function(results) {
-          wx.hideLoading({});
+          wx.hideLoading();
           that.onShow();
-          wx.showToast({
-            title: '上传成功',
-            duration:1000
+          wx.showModal({
+            content: '上传成功',
+            showCancel:false
           })
         }).catch(function(err) {
         });
@@ -290,19 +304,21 @@ Page({
       success: function(res) {
         if(res.data.code==200){
           that.onShow();
-          wx.showToast({
-            icon:'none',
-            title: '删除成功',
-            duration:1500
+          wx.showModal({
+            content: '删除成功',
+            showCancel:false
           })
+          
         }else{
           wx.showToast({
+            icon:'none',
             title: "删除失败"
           })
         }
       },
       fail: function(err) {
         wx.showToast({
+          icon:'none',
           title: "服务器异常"
         })
       }
@@ -312,12 +328,20 @@ Page({
   agree:function(e){
     var id = e.currentTarget.dataset.id;
     var oid = e.currentTarget.dataset.oid;
+    var status = e.currentTarget.dataset.status;
+    if(status==undefined || status!=1){
+      return;
+    }
     var that = this;
     var baseUrl = that.data.baseUrl;
+
     wx.showModal({
       content: '确定同意退款吗?',
       success (res) {
         if (res.confirm) {
+          wx.showLoading({
+            title: '退款中...',
+          })
           var param = {};
           param.id = id;
           param.oId = oid;
@@ -327,14 +351,38 @@ Page({
             data: param,
             success: function(res) {
               if(res.data.code==200){
-                var msg = res.data.msg;
-                that.onShow();
-                wx.showToast({
-                  title: msg,
-                  duration:1500
+                var data = {};
+                data.oId= oid;
+                data.id = id;
+                data.type=1;
+                wx.request({  
+                  url: baseUrl+"mini/queryRefundOrder",
+                  method: 'get',
+                  data: data,
+                  success(res) {
+                    wx.hideLoading()
+                    var result = res.data.msg;
+                    wx.showModal({
+                      content: result,
+                      showCancel:false
+                    })
+                    that.onShow();
+                  },
+                  fail(res){
+                    wx.hideLoading()
+                    wx.showModal({
+                      content: '支付中',
+                      showCancel:false
+                    })
+                    that.onShow();
+                  }
                 })
-                
-              } 
+
+              }else{
+                wx.showToast({
+                  title: "服务器异常"
+                })
+              }
             },
             fail: function(err) {
               wx.showToast({
@@ -358,7 +406,8 @@ Page({
     var backGray = that.data.backGray;
     var payPrice = that.data.payPrice;
     var payGray = that.data.payGray;
-    if(backPrice!=0 && !backGray){
+    var closeOrder = that.data.closeOrder;
+    if(backPrice!=0 && !backGray || closeOrder){
       return;
     }
     var content = '确定发货吗';
@@ -367,9 +416,9 @@ Page({
     }
     for(var idx in list){
       if(list[idx].chargeback_status==1){
-        wx.showToast({
-          icon:'none',
-          title: "有退款申请未处理"
+        wx.showModal({
+          content: '有退款申请未处理',
+          showCancel:false
         })
         return;
       }
@@ -389,25 +438,21 @@ Page({
             success: function(res) {
               if(res.data.code==200){
                 if(res.data.msg=='1'){
-                  wx.showToast({
-                    icon:'none',
-                    title: "有退款申请未处理",
-                    success:function(){
-                      setTimeout(function () {
-                        that.onShow();
-                      }, 1500);
-                    }
+                  wx.showModal({
+                    content: '有退款申请未处理',
+                    showCancel:false
                   })
+                  that.onShow();
                 }else{
-                  wx.showToast({
-                    icon:'none',
-                    title: '操作成功，已通知用户，请尽快发货',
-                    success:function(){
-                      setTimeout(function () {
+                  wx.showModal({
+                    content: '操作成功，已通知用户，请尽快发货',
+                    showCancel:false,
+                    success (res) {
+                      if (res.confirm) {
                         wx.switchTab({
                           url: '/pages/index/index'
                         })
-                      }, 1500);
+                      }
                     }
                   })
                 }
@@ -434,18 +479,17 @@ Page({
     var baseUrl = that.data.baseUrl;
     var backGray = that.data.backGray;
     var backPrice = that.data.backPrice;
+
     if(backGray || backPrice==0){
       return;
     }
     var list = that.data.list;
-    console.info(list)
     for(var idx in list){
       var item = list[idx];
       if(item.is_extra==1 && (!item.weightTip || !item.priceTip) ){
-        wx.showToast({
-          icon:'none',
-          title: '请完善退回信息',
-          duration:1500
+        wx.showModal({
+          content: '请完善退回信息',
+          showCancel:false
         })
         return;
       }
@@ -465,18 +509,29 @@ Page({
             method: 'get',
             data: param,
             success: function(res) {
-              wx.hideLoading({
-                complete: (res) => {},
-              })
               if(res.data.code==200){
-                var result = res.data.msg;
-                wx.showToast({
-                  icon:'none',
-                  title: result,
-                  success:function(){
-                    setTimeout(function () {
-                      that.onShow();
-                    }, 2000);
+                var data = {};
+                data.oId= that.data.oid;
+                data.type=2;
+                wx.request({  
+                  url: baseUrl+"mini/queryRefundOrder",
+                  method: 'get',
+                  data: data,
+                  success(res) {
+                    wx.hideLoading()
+                    var result = res.data.msg;
+                    wx.showModal({
+                      content: result,
+                      showCancel:false
+                    })
+                    that.onShow();
+                  },
+                  fail(res){
+                    wx.showModal({
+                      content: '支付中',
+                      showCancel:false
+                    })
+                    that.onShow();
                   }
                 })
                 
@@ -487,9 +542,6 @@ Page({
               }
             },
             fail: function(err) {
-              wx.hideLoading({
-                complete: (res) => {},
-              })
               wx.showToast({
                 title: "服务器异常"
               })
@@ -512,10 +564,9 @@ Page({
       var item = list[idx];
       if(item.is_extra==2){
         if(!item.weightTip || !item.priceTip){
-          wx.showToast({
-            icon:'none',
-            title: '请完善补差价信息',
-            duration:1500
+          wx.showModal({
+            content: '请完善补差价信息',
+            showCancel:false
           })
           return;
         }

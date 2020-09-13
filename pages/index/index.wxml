@@ -18,5 +18,5 @@
 
 
 <view wx:if="{{orderList.length==0}}">
-  <view style="display:flex;justify-content:center;color:#1296db;font-size:14px;margin-top:50px;">没有待处理的订单~</view>
+  <view style="display:flex;justify-content:center;color:#1296db;font-size:14px;margin-top:200px;">暂无订单，可尝试下拉刷新</view>
 </view>

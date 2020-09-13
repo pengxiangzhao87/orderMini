@@ -42,10 +42,28 @@ Page({
     })
   },
   toDetail:function(e){
-    var oid = e.currentTarget.dataset.oid;
-    wx.navigateTo({
-      url: '/pages/index/detail/detail?oid='+oid,
+    wx.getSetting({
+      withSubscriptions: true,
+      complete(res){
+        if(typeof(res.subscriptionsSetting.itemSettings)=='object' ){
+          var oid = e.currentTarget.dataset.oid;
+          wx.navigateTo({
+            url: '/pages/index/detail/detail?oid='+oid,
+          })
+        }else{
+          wx.requestSubscribeMessage({
+            tmplIds: ['fSY6OIzxAN8Ru7aFUNvwBUD80i561FaqwzkwIG_sNJQ','94fg3W3PWhDWzpZ_W5upX3megk0dxBL47w9w0SsmAKo','6Pcxa3JKbmABTMowyVr_8hACo9u3xiAm3p80Y6DIycQ'],
+            complete (res) { 
+              var oid = e.currentTarget.dataset.oid;
+              wx.navigateTo({
+                url: '/pages/index/detail/detail?oid='+oid,
+              })
+            }
+          })
+        }
+      }
     })
+   
   },
   onPullDownRefresh:function(){
     var that = this;

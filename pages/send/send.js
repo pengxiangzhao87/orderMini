@@ -24,7 +24,6 @@ Page({
       data: paras,
       success(res) {
         if(res.data.code==200){
-          
           that.setData({
             orderList:res.data.data
           })
@@ -109,10 +108,9 @@ Page({
       method: 'get',
       data: paras,
       success(res) {
-        wx.showToast({
-          icon:'none',
-          title: '已确认送达',
-          duration:1500
+        wx.showModal({
+          content: '已确认送达',
+          showCancel:false
         })
         that.onShow();
       },fail(){

@@ -20,7 +20,7 @@
             <view class="row-name" style="width:{{rowWW-110}}px;">{{item.sName}}</view>
           </view>
           <view class="btn" hidden="{{item.chargeback_status==undefined}}">
-            <text bindtap="agree" data-id="{{item.id}}"  data-oid="{{item.o_id}}" hidden="{{item.chargeback_status==2}}">退款</text><text hidden="{{item.chargeback_status==1}}">已退款</text>
+            <text bindtap="agree" data-id="{{item.id}}"  data-oid="{{item.o_id}}" data-status="{{item.chargeback_status}}">{{item.refundBack}}</text>
           </view>
           </view>
           <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;align-items:center;">
@@ -109,6 +109,8 @@
     </view>
   </view>
 
-  <view  class="btn_bottom {{backPrice!=0 && !backGray || list[0].order_status==3?'gray':'' }}" style="width:94%;font-size:16px;" bindtap="sendGoods">{{list[0].order_status==3?'已送达':'确定发货'}}</view> 
+
+  <view  class="btn_bottom {{backPrice!=0 && !backGray || closeOrder ?'gray':'' }}" style="width:94%;font-size:16px;" bindtap="sendGoods">{{list[0].orderStatus}}</view> 
+
 </view>
 
