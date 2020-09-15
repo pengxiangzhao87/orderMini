@@ -12,7 +12,7 @@
   <view  wx:for="{{list}}" wx:for-index="idx" wx:key="oid" wx:for-item="item">
     <view class="item">
       <view style="display:flex;flex-direction:row;">
-        <image src="{{item.coverUrl}}" style="width:100px;height:100px;" mode="aspectFit"></image>
+        <image src="{{baseUrl+'upload/'+item.coverUrl}}" style="width:100px;height:100px;" mode="aspectFit"></image>
         <view>
         <view class="row" style="width:{{rowWW}}px;">
           <view style="display:flex;flex-direction:row;">
@@ -78,7 +78,7 @@
               <view wx:if="{{detail.id==item.id}}" style="display:flex;flex-direction:row;">
                 <view wx:for="{{detail.urlList}}"  wx:for-index="idx" wx:key="oid" wx:for-item="url">
                   <view style="height:60px;width:60px;position: relative;margin-right:10px;">
-                    <image style="height:60px;width:60px;" src="{{url}}"></image>
+                    <image style="height:60px;width:60px;" src="{{baseUrl+'upload/'+url}}"></image>
                   </view>
                 </view>
               </view>
@@ -93,15 +93,18 @@
     <view class="total_row" style="margin-top:0px;">
       <text>实付金额合计</text><text style="margin-right:10px;margin-left:auto;">￥{{totalPay}}</text>
     </view>
-    <view hidden="{{extraPay==0}}">
-      <view class="total_row">
-        <text>用户补差价</text><text style="margin-right:10px;margin-left:auto;">￥{{extraPay}}</text>
-      </view>
-    </view>
 
-    <view hidden="{{extraBack==0}}">
-      <view class="total_row">
-        <text>返还差价</text><text style="margin-right:10px;margin-left:auto;color:#FF1F1F">-￥{{extraBack}}</text>
+    <view hidden="{{isHidden==1}}">
+      <view hidden="{{extraPay==0}}">
+        <view class="total_row">
+          <text>用户补差价</text><text style="margin-right:10px;margin-left:auto;">￥{{extraPay}}</text>
+        </view>
+      </view>
+
+      <view hidden="{{extraBack==0}}">
+        <view class="total_row">
+          <text>返还差价</text><text style="margin-right:10px;margin-left:auto;color:#FF1F1F">-￥{{extraBack}}</text>
+        </view>
       </view>
     </view>
 
@@ -111,18 +114,19 @@
       </view>
     </view>
 
-    <view hidden="{{chargebackPay==0}}">
-      <view class="total_row">
-        <text>用户补差价退款</text><text style="margin-right:10px;margin-left:auto;color:#FF1F1F">-￥{{chargebackPay}}</text>
+    <view hidden="{{isHidden==1}}">
+      <view hidden="{{chargebackPay==0}}">
+        <view class="total_row">
+          <text>用户补差价退款</text><text style="margin-right:10px;margin-left:auto;color:#FF1F1F">-￥{{chargebackPay}}</text>
+        </view>
+      </view>
+
+      <view hidden="{{chargebackBack==0}}">
+        <view class="total_row">
+          <text>返还差价</text><text style="margin-right:10px;margin-left:auto;color:#FF1F1F">￥{{chargebackBack}}</text>
+        </view>
       </view>
     </view>
-
-    <view hidden="{{chargebackBack==0}}">
-      <view class="total_row">
-        <text>返还差价</text><text style="margin-right:10px;margin-left:auto;color:#FF1F1F">￥{{chargebackBack}}</text>
-      </view>
-    </view>
-
     <view style="height:1px;background-color: rgb(240, 240, 240);border:0px;margin-left:10px;margin-right:10px;margin-top:10px;"></view>
 
     <view class="total_row">

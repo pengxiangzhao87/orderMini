@@ -48,42 +48,8 @@ Page({
     })
   },
   onPullDownRefresh:function(){
-    var that = this;
-    setTimeout(() => {
-      var baseUrl = that.data.baseUrl;
-      var paras= {};
-      paras.status=2;
-      paras.sId=wx.getStorageSync('sId');
-      wx.request({
-        url: baseUrl+"order/selectPendOrder",
-        method: 'get',
-        data: paras,
-        success(res) {
-          if(res.data.code==200){
-            if(res.data.msg=='1'){
-              wx.redirectTo({
-                url: '/pages/login/login',
-              })
-            }
-            that.setData({
-              orderList:res.data.data
-            })
-          }else{
-            wx.showToast({
-              icon:'none',
-              title: '服务器异常'
-            })
-          }
-          wx.stopPullDownRefresh();
-        },fail(res){
-          wx.showToast({
-            icon:'none',
-            title: '服务器异常'
-          })
-          wx.stopPullDownRefresh();
-        }
-      })
-    }, 1000);
+     this.onShow();
+     wx.stopPullDownRefresh();
   },
   callPhone:function(e){
     var phone = e.currentTarget.dataset.phone;
@@ -101,24 +67,34 @@ Page({
   confirmSend:function(e){
     var oid = e.currentTarget.dataset.oid;
     var that = this;
-    var paras = {};
-    paras.oId = oid;
-    wx.request({
-      url: baseUrl+"order/confirmSend",
-      method: 'get',
-      data: paras,
-      success(res) {
-        wx.showModal({
-          content: '已确认送达',
-          showCancel:false
-        })
-        that.onShow();
-      },fail(){
-        wx.showToast({
-          icon:'none',
-          title: '服务器异常'
-        })
+    var baseUrl = that.data.baseUrl;
+    wx.showModal({
+      content: '确认送达吗?',
+      success (res) {
+        if (res.confirm) {
+          var paras = {};
+          paras.oId = oid;
+          paras.sId=wx.getStorageSync('sId')
+          wx.request({
+            url: baseUrl+"order/confirmSend",
+            method: 'get',
+            data: paras,
+            success(res) {
+              wx.showToast({
+                icon:'none',
+                title: '状态已变更',
+              })
+              that.onShow();
+            },fail(){
+              wx.showToast({
+                icon:'none',
+                title: '服务器异常'
+              })
+            }
+          })
+        }
       }
     })
+    
   }
 })

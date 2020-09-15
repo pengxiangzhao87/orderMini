@@ -1,8 +1,8 @@
 //app.js
 App({
   globalData:{
-    //baseUrl:"https://www.sotardust.cn/CMTGP/",
-    baseUrl:"http://192.168.1.142:9000/CMTGP/",
+    baseUrl:"https://www.sotardust.cn/CMTGP/",
+    //baseUrl:"http://192.168.1.142:9000/CMTGP/",
     ww:0,
     hh:0,
   },
@@ -23,7 +23,6 @@ App({
     var that = this;
     var token = wx.getStorageSync('token');
     if(token!=''){
-      console.info('token',token)
       wx.request({
         url: that.globalData.baseUrl+"mini/checkToken",
         method: 'get',
@@ -51,7 +50,6 @@ App({
         }
       })
     }
-    
   }
    
 })

@@ -30,6 +30,7 @@ Page({
   },
   onShow:function(){
     var that = this;
+    var isHidden = that.data.isHidden;
     var baseUrl = app.globalData.baseUrl;
     var paras = {};
     paras.oId=that.data.oid;
@@ -42,9 +43,9 @@ Page({
         if(res.data.code==200){
           var data = res.data.data;
           var imageList = [];
-          var totalPay = parseFloat(data[0].total_price);
-          var extraPay = parseFloat(data[0].extra_status!=undefined?data[0].extra_payment:0);
-          var extraBack = parseFloat(data[0].back_price_status!=undefined?data[0].total_back_price:0);
+          var totalPay = parseFloat(0);
+          var extraPay = isHidden==0?(parseFloat(data[0].extra_status!=undefined?data[0].extra_payment:0)):parseFloat(0);
+          var extraBack = isHidden==0?(parseFloat(data[0].back_price_status!=undefined?data[0].total_back_price:0)):parseFloat(0);
           var chargeback = parseFloat(0);
           var chargebackPay = parseFloat(0);
           var chargebackBack = parseFloat(0);
@@ -53,6 +54,7 @@ Page({
             var extra_img_url = item.extra_img_url;
             var image = {};
             image.id=item.id;
+            totalPay += parseFloat(item.payment_price);
             if(extra_img_url!=undefined && extra_img_url!=''){
               image.urlList = extra_img_url.split('~');
             }
@@ -61,10 +63,7 @@ Page({
             if(item.is_extra==2 && item.extra_pay_back_status!=undefined){
               chargebackPay += parseFloat(item.extra_price);
             }
-            //商户返还差价
-            if(item.is_extra==1 && item.back_price_status!=undefined ){
-              extraBack += parseFloat(item.extra_price);
-            }
+
             if(item.chargeback_status!=undefined){
               //退款
               chargeback += parseFloat(item.payment_price);

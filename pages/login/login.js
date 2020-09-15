@@ -73,7 +73,6 @@ Page({
       data: paras,
       success(res) {
         if(res.data.code==200){
-          console.info(res)
           wx.setStorageSync('sId', res.data.data.sId);
           wx.setStorageSync('isHidden', res.data.data.isHidden);
           wx.switchTab({

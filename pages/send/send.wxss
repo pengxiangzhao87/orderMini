@@ -21,3 +21,17 @@ page{
   align-items: center;
   
 }
+
+.btn{
+  color:white;
+  margin-left:auto;
+  margin-right:10px;
+  border:1px solid white;
+  background-color:#1296db;
+  width:80px;
+  height:25px;
+  border-radius:5px;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+}

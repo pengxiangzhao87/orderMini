@@ -40,11 +40,6 @@ Page({
       data: paras,
       success(res) {
         if(res.data.code==200){
-          if(res.data.msg=='1'){
-            wx.redirectTo({
-              url: '/pages/login/login',
-            })
-          }
           var data = res.data.data;
           var imageList = [];
           var payPrice = parseFloat(0);
@@ -59,7 +54,7 @@ Page({
             var extra_img_url = item.extra_img_url;
             var image = {};
             image.id=item.id;
-            if(item.orderStatus!='已送达'){
+            if(item.order_status!=5 && item.order_status!=6){
               if(item.chargeback_status==undefined){
                 closeOrder = false;
               }
@@ -116,94 +111,8 @@ Page({
     })
   },
   onPullDownRefresh:function(){
-    var that = this;
-    setTimeout(() => {
-      var baseUrl = app.globalData.baseUrl;
-      var paras = {};
-      paras.oId=that.data.oid;
-      paras.sId=wx.getStorageSync('sId');
-      wx.request({
-        url: baseUrl+"order/selectPenderDetail",
-        method: 'get',
-        data: paras,
-        success(res) {
-          if(res.data.code==200){
-            if(res.data.msg=='1'){
-              wx.redirectTo({
-                url: '/pages/login/login',
-              })
-            }
-            var data = res.data.data;
-            var imageList = [];
-            var payPrice = parseFloat(0);
-            var payGray = false;
-            var backPrice = parseFloat(0);
-            var backGray = false;
-            var backHidden = true;
-            var payHidden = true;
-            var closeOrder = true;
-            for(var idx in data){
-              var item = data[idx];
-              var extra_img_url = item.extra_img_url;
-              var image = {};
-              image.id=item.id;
-              if(item.orderStatus!='已送达'){
-                if(item.chargeback_status==undefined){
-                  closeOrder = false;
-                }
-              }
-              if(extra_img_url!=undefined && extra_img_url!=''){
-                image.urlList = extra_img_url.split('~');
-              }
-              imageList[imageList.length]=image;
-              
-              if(item.is_extra==1){
-                item.weightTip = item.extra_weight==0 || item.extra_weight==undefined?false:true;
-                item.priceTip = item.extra_price==0 || item.extra_price==undefined?false:true;
-                //商家退还差价
-                backPrice += parseFloat(item.extra_price);
-                if(item.back_price_status!=undefined){
-                  backGray=true;
-                }
-                backHidden=false;
-              }else if(item.is_extra==2){
-                item.weightTip = item.extra_weight==0 || item.extra_weight==undefined?false:true;
-                item.priceTip = item.extra_price==0 || item.extra_price==undefined?false:true;
-                //用户补差价
-                payPrice += parseFloat(item.extra_price);
-                if(item.extra_status!=undefined){
-                  payGray=true;
-                }
-                payHidden=false;
-              }
-            }
-            that.setData({
-              list:data,
-              baseUrl:baseUrl,
-              imageList:imageList,
-              payPrice:payPrice,
-              payGray:payGray,
-              payHidden:payHidden,
-              backPrice:backPrice,
-              backGray:backGray,
-              backHidden:backHidden,
-              closeOrder:closeOrder
-            })
-          }else{
-            wx.showToast({
-              icon:'none',
-              title: '服务器异常'
-            })
-          }
-        },fail(res){
-          wx.showToast({
-            icon:'none',
-            title: '服务器异常'
-          })
-        }
-      })
-    }, 1000);
-    
+    this.onShow();
+    wx.stopPullDownRefresh();
   },
   changeExtra:function(e){
     var flag = e.currentTarget.dataset.flag;
@@ -214,8 +123,7 @@ Page({
     var list = that.data.list;
 
     var item = list[idx];
-
-    if((item.back_price_status!=undefined && (item.is_extra==1 || flag==1)) || item.chargeback_status!=undefined){
+    if((item.back_price_status!=undefined && (flag==1 || item.is_extra==1)) || item.chargeback_status!=undefined || (item.extra_status!=undefined && (flag==2 || item.is_extra==2))){
       return; 
     }
 
@@ -278,9 +186,9 @@ Page({
         promise.then(function(results) {
           wx.hideLoading();
           that.onShow();
-          wx.showModal({
-            content: '上传成功',
-            showCancel:false
+          wx.showToast({
+            icon:'none',
+            title: '上传成功'
           })
         }).catch(function(err) {
         });
@@ -326,15 +234,33 @@ Page({
   },
   //退款
   agree:function(e){
-    var id = e.currentTarget.dataset.id;
-    var oid = e.currentTarget.dataset.oid;
-    var status = e.currentTarget.dataset.status;
+    var idx = e.currentTarget.dataset.idx;
+    var that = this;
+    var list = that.data.list;
+    var status = list[idx].chargeback_status;
     if(status==undefined || status!=1){
       return;
     }
-    var that = this;
+    var extraStatus = list[idx].extra_status;
+    if(extraStatus!=undefined && extraStatus==3){
+      wx.showModal({
+        content: '差价支付入账中，请稍后再试',
+        showCancel:false
+      })
+      return;
+    }
+    var isExtra = list[idx].is_extra;
+    var backStatus = list[idx].back_price_status;
+    if(isExtra==1 && backStatus==3){
+      wx.showModal({
+        content: '差价退款入账中，请稍后再试',
+        showCancel:false
+      })
+      return;
+    }
     var baseUrl = that.data.baseUrl;
-
+    var id = list[idx].id;
+    var oid = list[idx].o_id;
     wx.showModal({
       content: '确定同意退款吗?',
       success (res) {
@@ -410,10 +336,6 @@ Page({
     if(backPrice!=0 && !backGray || closeOrder){
       return;
     }
-    var content = '确定发货吗';
-    if(payPrice!=0 && !payGray){
-      content = '用户还未支付差价，确定发货吗';
-    }
     for(var idx in list){
       if(list[idx].chargeback_status==1){
         wx.showModal({
@@ -423,6 +345,10 @@ Page({
         return;
       }
     }
+    var content = '确定发货吗';
+    if(payPrice!=0 && !payGray){
+      content = '用户还未支付差价，确定发货吗';
+    }
     wx.showModal({
       content: content,
       success (res) {
@@ -431,6 +357,7 @@ Page({
           var oid = that.data.oid;
           var param = {};
           param.oId = oid;
+          param.sId=wx.getStorageSync('sId');
           wx.request({
             url: baseUrl+"order/sendOrder",
             method: 'get',
@@ -566,6 +493,13 @@ Page({
         if(!item.weightTip || !item.priceTip){
           wx.showModal({
             content: '请完善补差价信息',
+            showCancel:false
+          })
+          return;
+        }
+        if(item.extra_img_url==undefined){
+          wx.showModal({
+            content: '请上传差价图片',
             showCancel:false
           })
           return;

@@ -12,7 +12,7 @@
   <view  wx:for="{{list}}" wx:for-index="idx" wx:key="oid" wx:for-item="item">
     <view class="item">
       <view style="display:flex;flex-direction:row;">
-        <image src="{{item.coverUrl}}" style="width:100px;height:100px;" mode="aspectFit"></image>
+        <image src="{{baseUrl+'upload/'+item.coverUrl}}" style="width:100px;height:100px;" mode="aspectFit"></image>
         <view>
         <view class="row" style="width:{{rowWW}}px;">
           <view style="display:flex;flex-direction:row;">
@@ -20,7 +20,7 @@
             <view class="row-name" style="width:{{rowWW-110}}px;">{{item.sName}}</view>
           </view>
           <view class="btn" hidden="{{item.chargeback_status==undefined}}">
-            <text bindtap="agree" data-id="{{item.id}}"  data-oid="{{item.o_id}}" data-status="{{item.chargeback_status}}">{{item.refundBack}}</text>
+            <text bindtap="agree" data-idx="{{idx}}" >{{item.refundBack}}</text>
           </view>
           </view>
           <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;align-items:center;">
@@ -55,7 +55,6 @@
         <view class="row" hidden="{{item.is_extra==0}}">
           <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;font-size:12px;">
             <view style="height:20px;margin-top:0px;display:flex;align-items:center;">误差重量：</view>
-
             <view>
               <view style="display:flex;flex-direction:row;align-items:center;">
                 <input bindblur="saveWeight" data-id="{{item.id}}" disabled="{{item.extra_status!=undefined && item.is_extra==2 || item.back_price_status!=undefined && item.is_extra==1}}" class="{{item.is_extra==1?(item.back_price_status!=undefined?'row_input_back gray':'row_input_back '):(item.extra_status!=undefined?'row_input_pay gray':'row_input_pay')}}" type="digit" value="{{item.extra_weight}}"></input><text decode="true">&nbsp;克</text>
@@ -64,7 +63,6 @@
             </view>
             
             <view style="margin-left:20px;height:20px;margin-top:0px;display:flex;align-items:center;">价格：</view>
-
             <view>
               <view style="display:flex;flex-direction:row;align-items:center;">
                 <input bindblur="savePrice" data-id="{{item.id}}" disabled="{{item.extra_status!=undefined && item.is_extra==2 || item.back_price_status!=undefined && item.is_extra==1}}" class="{{item.is_extra==1?(item.back_price_status!=undefined?'row_input_back gray':'row_input_back '):(item.extra_status!=undefined?'row_input_pay gray':'row_input_pay')}}" type="digit" value="{{item.extra_price}}"></input><text decode="true">&nbsp;元</text>
@@ -80,12 +78,12 @@
               <view wx:if="{{detail.id==item.id}}" style="display:flex;flex-direction:row;">
                 <view wx:for="{{detail.urlList}}"  wx:for-index="idx" wx:key="oid" wx:for-item="url">
                   <view style="height:60px;width:60px;position: relative;margin-right:10px;">
-                    <image style="height:15px;width:15px;top:0px;right:0px;position: absolute;" bindtap="deletePic" data-id="{{detail.id}}" data-url="{{url}}" data-idx="{{idx}}" hidden="{{list[0].extra_status==1 || list[0].total_back_price!=undefined}}" src="/image/delete.png"></image>
-                    <image style="height:60px;width:60px;" src="{{url}}"></image>
+                    <image style="height:15px;width:15px;top:0px;right:0px;position: absolute;" bindtap="deletePic" data-id="{{detail.id}}" data-url="{{url}}" data-idx="{{idx}}" hidden="{{item.extra_back_status!=undefined || item.extra_pay_status!=undefined}}" src="/image/delete.png"></image>
+                    <image style="height:60px;width:60px;" src="{{baseUrl+'upload/'+url}}"></image>
                   </view>
                 </view>
                 <view hidden="{{detail.urlList.length==3 || item.extra_pay_status!=undefined || item.extra_back_status!=undefined}}">
-                  <view bindtap="uploadPic" data-id="{{item.id}}" style="height:100px;width:100px;border:0.5px solid #F5F5F5;display:flex;align-items: center;justify-content: center;">
+                  <view bindtap="uploadPic" data-id="{{item.id}}" class="uploadPic {{detail.urlList==undefined && item.is_extra==2?'red':''}}">
                     <image style="height:40px;width:40px;" src="/image/icon_add.png"></image>
                   </view>
                 </view>
