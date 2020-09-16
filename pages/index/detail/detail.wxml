@@ -1,11 +1,12 @@
 <!--pages/index/detail/detail.wxml-->
 <view class="item">
-  <view style="margin-left:10px;margin-top:5px;">{{list[0].consignee_range_time}}</view>
+  <view style="margin-left:10px;">订单号：<text style="color:#1296db" catchtap="copy" data-oid="{{item.o_id}}" >{{list[0].o_id}}</text></view>
+  <view style="margin-left:10px;margin-top:5px;">配送时间：{{list[0].consignee_range_time}}</view>
   <view style="display:flex;flex-direction:row;align-items: center;font-weight: bolder;margin-top:5px;"  >
     <view style="margin-left:10px;">{{list[0].consignee_name}}</view>
     <view style="margin-left:5px;color:#1296db" catchtap="callPhone" data-phone="{{list[0].consignee_phone}}">{{list[0].consignee_phone}}</view>
   </view>
-  <view style="margin-left:10px;margin-top:5px;margin-bottom:5px;color:#666666;font-size:13px;">{{list[0].consignee_address}}</view>
+  <view style="margin-left:10px;margin-top:5px;margin-bottom:5px;font-weight:bolder;color:#666666;font-size:13px;">{{list[0].consignee_address}}</view>
 </view>
 
 <view style="margin-bottom:200px;margin-top:10px;" >

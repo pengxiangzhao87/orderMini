@@ -17,7 +17,6 @@ Page({
     chargebackBack:0,
     totalGet:0
   },
-
   onLoad:function(e) {
     var isHidden = wx.getStorageSync('isHidden');
     var ww = app.globalData.ww;

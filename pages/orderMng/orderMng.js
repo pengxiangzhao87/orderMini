@@ -8,30 +8,31 @@ Page({
      endDate:'',
      orderList:Array,
      totalPage:0,
-     paras:{}
+     paras:null
   },
   onLoad:function(){
+    var now = new Date();
+    var month = now.getMonth()+1;
+    var day = now.getDate();
+    var nowDate = now.getFullYear() + '-' + (month<10?'0'+month:month) + '-' + (day<10?'0'+day:day);
     this.setData({
-      baseUrl:app.globalData.baseUrl
+      baseUrl:app.globalData.baseUrl,
+      startDate:nowDate,
+      endDate:nowDate
     })
   },
   onShow: function () {
     var that = this;
     var baseUrl = that.data.baseUrl;
-    var now = new Date();
-    var month = now.getMonth()+1;
-    var day = now.getDate();
-    var nowDate = now.getFullYear() + '-' + (month<10?'0'+month:month) + '-' + (day<10?'0'+day:day);
-    that.setData({
-      startDate:nowDate,
-      endDate:nowDate
-    })
-    var paras = {};
-    paras.sId=wx.getStorageSync('sId');
-    paras.startDate=nowDate + ' 00:00:00';
-    paras.endDate=nowDate + ' 23:59:59';
-    paras.pageNo=1;
-    paras.pageSize=20;
+    var paras = that.data.paras;
+    if(paras==null){
+      paras = {};
+      paras.sId=wx.getStorageSync('sId');
+      paras.startDate=that.data.startDate + ' 00:00:00';
+      paras.endDate=that.data.endDate + ' 23:59:59';
+      paras.pageNo=1;
+      paras.pageSize=20;
+    }
     that.getOrderList(that,baseUrl,paras);
   },
   getOrderList:function(that,baseUrl,paras){

@@ -74,12 +74,6 @@ Page({
     wx.makePhoneCall({
       phoneNumber: phone
     })
-  },
-  copy:function(e){
-    var oid = e.currentTarget.dataset.oid+'';
-    wx.setClipboardData({
-      data: oid,
-      success (res) {}
-    })
   }
+  
 })

@@ -123,6 +123,7 @@ Page({
     var list = that.data.list;
 
     var item = list[idx];
+
     if((item.back_price_status!=undefined && (flag==1 || item.is_extra==1)) || item.chargeback_status!=undefined || (item.extra_status!=undefined && (flag==2 || item.is_extra==2))){
       return; 
     }
@@ -578,6 +579,13 @@ Page({
       success: function(res) {
         that.onShow();
       }
+    })
+  },
+  copy:function(e){
+    var oid = e.currentTarget.dataset.oid+'';
+    wx.setClipboardData({
+      data: oid,
+      success (res) {}
     })
   }
 })
