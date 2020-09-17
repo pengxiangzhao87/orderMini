@@ -63,7 +63,7 @@ Page({
               chargebackPay += parseFloat(item.extra_price);
             }
 
-            if(item.chargeback_status!=undefined){
+            if(item.chargeback_status==2){
               //退款
               chargeback += parseFloat(item.payment_price);
               //补回商家返的差价
@@ -72,7 +72,7 @@ Page({
               }
             }
           }
-          var totalGet =(totalPay+extraPay-extraBack-chargeback-chargebackPay+chargebackBack).toFixed(2);
+          var totalGet =(totalPay+(data[0].extra_status==1?extraPay:0)-(data[0].back_price_status==2?extraBack:0)-chargeback-chargebackPay+chargebackBack).toFixed(2);
           totalPay = totalPay.toFixed(2);
           extraPay = extraPay.toFixed(2);
           extraBack = extraBack.toFixed(2);

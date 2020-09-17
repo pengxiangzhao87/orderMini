@@ -20,7 +20,7 @@
             <view class="row-name" style="width:{{rowWW-110}}px;">{{item.sName}}</view>
           </view>
           <view class="btn" hidden="{{item.chargeback_status==undefined}}">
-            <text hidden="{{item.chargeback_status==2}}">退款</text><text hidden="{{item.chargeback_status==1}}">已退款</text>
+            <text>{{item.refundBack}}</text>
           </view>
           </view>
           <view style="margin-left:10px;margin-top:5px;display:flex;flex-direction:row;align-items:center;">
@@ -89,53 +89,52 @@
     </view>
   </view>
 
-  <view style="background-color: #FFFFFF;width:100%;font-size:10px;padding-top:10px;padding-bottom:10px;">
+  <view style="background-color: #FFFFFF;width:100%;font-size:14px;padding-top:10px;padding-bottom:10px;">
     <view class="total_row" style="margin-top:0px;">
-      <text>实付金额合计</text><text style="margin-right:10px;margin-left:auto;">￥{{totalPay}}</text>
+      <text>实付金额合计</text><text style="margin-right:10px;margin-left:auto;color:green">￥{{totalPay}}</text>
     </view>
 
     <view hidden="{{isHidden==1}}">
       <view hidden="{{extraPay==0}}">
         <view class="total_row">
-          <text>用户补差价</text><text style="margin-right:10px;margin-left:auto;">￥{{extraPay}}</text>
+          <text>差价金额</text><text style="margin-right:10px;margin-left:auto;color:green">￥{{extraPay}}({{list[0].payText}})</text>
         </view>
       </view>
-
       <view hidden="{{extraBack==0}}">
         <view class="total_row">
-          <text>返还差价</text><text style="margin-right:10px;margin-left:auto;color:#FF1F1F">-￥{{extraBack}}</text>
+          <text>返还金额</text><text style="margin-right:10px;margin-left:auto;color:#FF1F1F">-￥{{extraBack}}({{list[0].backText}})</text>
         </view>
       </view>
     </view>
 
     <view hidden="{{chargeback==0}}">
       <view class="total_row">
-        <text>退款金额合计</text><text style="margin-right:10px;margin-left:auto;color:#FF1F1F">-￥{{chargeback}}</text>
+        <text>退款商品金额</text><text style="margin-right:10px;margin-left:auto;color:#FF1F1F">-￥{{chargeback}}</text>
       </view>
     </view>
 
     <view hidden="{{isHidden==1}}">
       <view hidden="{{chargebackPay==0}}">
         <view class="total_row">
-          <text>用户补差价退款</text><text style="margin-right:10px;margin-left:auto;color:#FF1F1F">-￥{{chargebackPay}}</text>
+          <text>退款差价金额</text><text style="margin-right:10px;margin-left:auto;color:#FF1F1F">-￥{{chargebackPay}}</text>
         </view>
       </view>
-
       <view hidden="{{chargebackBack==0}}">
         <view class="total_row">
-          <text>返还差价</text><text style="margin-right:10px;margin-left:auto;color:#FF1F1F">￥{{chargebackBack}}</text>
+          <text>退款返还金额</text><text style="margin-right:10px;margin-left:auto;color:green">￥{{chargebackBack}}</text>
         </view>
       </view>
     </view>
+
     <view style="height:1px;background-color: rgb(240, 240, 240);border:0px;margin-left:10px;margin-right:10px;margin-top:10px;"></view>
 
-    <view class="total_row">
-      <text style="font-size:14px;">实收金额合计</text><text style="margin-right:10px;margin-left:auto;font-size:14px;">￥{{totalGet}}</text>
+    <view class="total_row" style="font-weight: bolder;">
+      <text>实收金额合计</text><text style="margin-right:10px;margin-left:auto;">￥{{totalGet}}</text>
     </view>
   </view>
 
 
-  <view style="background-color: #FFFFFF;width:100%;font-size:10px;padding-top:10px;padding-bottom:10px;margin-top:10px;">
+  <view style="background-color: #FFFFFF;width:100%;font-size:14px;padding-top:10px;padding-bottom:10px;margin-top:10px;">
     <view class="total_row" style="margin-top:0px;">
       <text>订单号</text><text style="margin-right:10px;margin-left:auto;" >{{list[0].o_id}}<text bindtap="copy" data-oid="{{info.o_id}}" style="color:#1296db;" decode="true">&nbsp;复制</text></text>
     </view>
