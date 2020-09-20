@@ -3,11 +3,13 @@
     "pages/login/login",
     "pages/index/index",
     "pages/orderMng/orderMng",
-    "pages/send/send"    
+    "pages/goods/goods",
+    "pages/goods/add/add",
+    "pages/goods/update/update"    
   ],
   "window":{
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
+    "navigationBarTitleText": "食朝夕",
     "navigationBarTextStyle":"black",
     "backgroundTextStyle":"dark",
     "enablePullDownRefresh":true
@@ -22,15 +24,15 @@
         "selectedIconPath":"image/cl_select.png",
         "text": "待发货"
       },{
-        "pagePath": "pages/send/send",
-        "iconPath":"image/send.png",
-        "selectedIconPath":"image/send_select.png",
-        "text": "送货中"
-      },{
         "pagePath": "pages/orderMng/orderMng",
         "iconPath":"image/mng.png",
         "selectedIconPath":"image/mng_select.png",
         "text": "订单管理"
+      },{
+        "pagePath": "pages/goods/goods",
+        "iconPath":"image/send.png",
+        "selectedIconPath":"image/send_select.png",
+        "text": "商品管理"
       }
     ]
   },

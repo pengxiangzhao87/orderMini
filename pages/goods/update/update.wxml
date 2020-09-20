@@ -1,0 +1,88 @@
+<!--pages/goods/add/add.wxml-->
+<form id="aaa" bindsubmit="addGood">
+  <view style="margin-top:10px;background-color:#FFFFFF;color:#333333;font-size:14px;">
+    <view class="row">
+      <view class="left">商品分类</view>
+      <picker style="width:70px;" mode="selector" range="{{typeList}}" value="{{index}}" range-key="{{'tName'}}" bindchange="changeType"><input disabled="true" style="padding-left:5px;border:0.5px solid #999999;" name="tId" value="{{typeList[index].tName}}"></input></picker>
+    </view>
+    <view class="row">
+      <view class="left">参加活动</view>
+      <picker style="width:70px;" mode="selector" range="{{activeList}}" value="{{activeIdx}}" range-key="{{'name'}}" bindchange="changeActive"><input disabled="true" style="padding-left:5px;border:0.5px solid #999999;" name="isActive" value="{{activeList[activeIdx].name}}"></input></picker>
+    </view>
+    <view class="row">
+      <view class="left">商品名称</view>
+      <input style="margin-left:10px;width:100%;" name="sName" type="text" value="{{list.sName}}"/>
+    </view>
+    <view class="row">
+      <view class="left">商品价格</view>
+      <input style="margin-left:10px;width:100%;" name="sPrice" type="digit" value="{{list.sPrice}}"/>
+    </view>
+    <view class="row">
+      <view class="left">商品单位</view>
+      <input style="margin-left:10px;width:100%;" name="sUnit" type="text" value="{{list.sUnit}}"/>
+    </view>
+    <view class="row">
+      <view class="left">售卖方式</view>
+      <picker style="width:70px;" mode="selector" range="{{unitList}}" value="{{unitIdx}}" range-key="{{'name'}}" bindchange="changeUnit"><input disabled="true" style="padding-left:5px;border:0.5px solid #999999;" name="initUnit" value="{{unitList[unitIdx].name}}"></input></picker>
+    </view>
+    <view class="row">
+      <view class="left">商品单价</view>
+      <input style="margin-left:10px;width:100%;" name="priceUnit" type="digit" value="{{list.priceUnit}}"/>
+    </view>
+    <view class="row">
+      <view class="left">初始数量</view>
+      <input style="margin-left:10px;width:100%;" name="initNum" type="number" value="{{list.initNum}}"/>
+    </view>
+    <view class="row">
+      <view class="left">商品图片</view>
+      <button style="margin-left:0px;padding:0 0 0 0;height:30px;width:80px;font-size:12px;align-items: center;display:flex;justify-content: center;" bindtap="uploadPic">上传图片</button>
+    </view>
+    <view hidden="{{list.goodsPic==undefined}}">
+      <scroll-view scroll-x style="margin-left:80px;width:75%;height:80px;white-space:nowrap;">
+        <view wx:for="{{list.goodsPic}}"  style=" display: inline-block;" wx:for-index="idx" wx:key="s_id" wx:for-item="url">
+          <view style="height:80px;width:80px;position: relative;margin-right:10px;">
+            <image style="height:15px;width:15px;top:0px;right:0px;position: absolute;" bindtap="deletePic" data-idx="{{idx}}" src="/image/delete.png"></image>
+            <image style="height:80px;width:80px;margin-left:5px;" mode="aspectFit" src="{{url}}" ></image>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+    <view hidden="{{goodsPic.length==0}}">
+      <scroll-view scroll-x style="margin-left:80px;width:75%;height:80px;white-space:nowrap;">
+        <view wx:for="{{goodsPic}}"  style=" display: inline-block;" wx:for-index="idx" wx:key="s_id" wx:for-item="url">
+          <view style="height:80px;width:80px;position: relative;margin-right:10px;">
+            <image style="height:15px;width:15px;top:0px;right:0px;position: absolute;" bindtap="deletePic" data-idx="{{idx}}" src="/image/delete.png"></image>
+            <image style="height:80px;width:80px;margin-left:5px;" mode="aspectFit" src="{{url}}" ></image>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+    <view class="row">
+      <view class="left">商品视频</view>
+      <button style="margin-left:0px;padding:0 0 0 0;height:30px;width:80px;font-size:12px;align-items: center;display:flex;justify-content: center;" bindtap="uploadVideo">上传视频</button>
+    </view>
+    <view hidden="{{videoUrl==''}}">
+      <view style="margin-left:80px;height:80px;display:flex;justify-content: center;">
+        <video style="width:80px;height:80px;" src="{{videoUrl}}"></video>
+        <button style="margin-left:20px;margin-top:20px;padding:0 0 0 0;height:30px;width:80px;font-size:12px;align-items: center;display:flex;justify-content: center;" bindtap="deleteVideo">删除视频</button>
+      </view>
+    </view>
+    <view class="row">
+      <view class="left">商品描述</view>
+      <button style="margin-left:0px;padding:0 0 0 0;height:30px;width:80px;font-size:12px;align-items: center;display:flex;justify-content: center;" bindtap="uploadDesc">上传图片</button>
+    </view>
+    <view hidden="{{goodsDesc.length==0}}">
+      <scroll-view scroll-x style="margin-left:80px;width:75%;height:80px;white-space:nowrap;">
+        <view wx:for="{{goodsDesc}}"  style=" display: inline-block;" wx:for-index="idx" wx:key="s_id" wx:for-item="url">
+          <view style="height:80px;width:80px;position: relative;margin-right:10px;">
+            <image style="height:15px;width:15px;top:0px;right:0px;position: absolute;" bindtap="deleteDesc" data-idx="{{idx}}" src="/image/delete.png"></image>
+            <image style="height:80px;width:80px;margin-left:5px;" mode="aspectFit" src="{{url}}" ></image>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <button style="background-color:#1296db;color:#ffffff;width:96%;margin-left:2%;margin-top:20px;margin-bottom:10px;" form-type="submit" >保存</button>
+</form>
+

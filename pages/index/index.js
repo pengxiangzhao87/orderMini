@@ -3,7 +3,11 @@
 var app = getApp()
 Page({
   data: {
-    orderList:[]
+    orderList:[],
+    doFlag:false,
+    sendList:[],
+    sendFlag:true,
+    status:1
   },
 
   onLoad: function () {
@@ -16,7 +20,8 @@ Page({
     var that = this;
     var baseUrl = that.data.baseUrl;
     var paras= {};
-    paras.status=1;
+    var status = that.data.status;
+    paras.status=status;
     paras.sId=wx.getStorageSync('sId');
     wx.request({
       url: baseUrl+"order/selectPendOrder",
@@ -24,9 +29,22 @@ Page({
       data: paras,
       success(res) {
         if(res.data.code==200){
-          that.setData({
-            orderList:res.data.data
-          })
+          if(status==1){
+            that.setData({
+              orderList:res.data.data,
+              doFlag:true,
+              sendFlag:false,
+              status:status
+            })
+          }else{
+            that.setData({
+              sendList:res.data.data,
+              doFlag:false,
+              sendFlag:true,
+              status:status
+            })
+          }
+          
         }else{
           wx.showToast({
             icon:'none',
@@ -41,33 +59,29 @@ Page({
       }
     })
   },
+  toDoing:function(){
+    this.setData({
+      status:1
+    })
+    this.onShow();
+  },
+  sending:function(){
+    this.setData({
+      status:2
+    })
+    this.onShow();
+  },
   toDetail:function(e){
     var oid = e.currentTarget.dataset.oid;
     wx.navigateTo({
       url: '/pages/index/detail/detail?oid='+oid,
     })
-    // wx.getSetting({
-    //   withSubscriptions: true,
-    //   complete(res){
-    //     if(typeof(res.subscriptionsSetting.itemSettings)=='object' ){
-    //       var oid = e.currentTarget.dataset.oid;
-    //       wx.navigateTo({
-    //         url: '/pages/index/detail/detail?oid='+oid,
-    //       })
-    //     }else{
-    //       wx.requestSubscribeMessage({
-    //         tmplIds: ['fSY6OIzxAN8Ru7aFUNvwBUD80i561FaqwzkwIG_sNJQ','94fg3W3PWhDWzpZ_W5upX3megk0dxBL47w9w0SsmAKo','6Pcxa3JKbmABTMowyVr_8hACo9u3xiAm3p80Y6DIycQ'],
-    //         complete (res) { 
-    //           var oid = e.currentTarget.dataset.oid;
-    //           wx.navigateTo({
-    //             url: '/pages/index/detail/detail?oid='+oid,
-    //           })
-    //         }
-    //       })
-    //     }
-    //   }
-    // })
-   
+  },
+  toMngDetail:function(e){
+    var oid = e.currentTarget.dataset.oid;
+    wx.navigateTo({
+      url: '/pages/orderMng/detail/detail?oid='+oid,
+    })
   },
   onPullDownRefresh:function(){
     this.onShow();
@@ -78,6 +92,45 @@ Page({
     wx.makePhoneCall({
       phoneNumber: phone
     })
+  },
+  copy:function(e){
+    var oid = e.currentTarget.dataset.oid+'';
+    wx.setClipboardData({
+      data: oid,
+      success (res) {}
+    })
+  },
+  confirmSend:function(e){
+    var oid = e.currentTarget.dataset.oid;
+    var that = this;
+    var baseUrl = that.data.baseUrl;
+    wx.showModal({
+      content: '确认送达吗?',
+      success (res) {
+        if (res.confirm) {
+          var paras = {};
+          paras.oId = oid;
+          paras.sId=wx.getStorageSync('sId')
+          wx.request({
+            url: baseUrl+"order/confirmSend",
+            method: 'get',
+            data: paras,
+            success(res) {
+              wx.showToast({
+                icon:'none',
+                title: '状态已变更',
+              })
+              that.onShow();
+            },fail(){
+              wx.showToast({
+                icon:'none',
+                title: '服务器异常'
+              })
+            }
+          })
+        }
+      }
+    })
+    
   }
-  
 })

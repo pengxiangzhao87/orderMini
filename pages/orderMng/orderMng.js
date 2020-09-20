@@ -1,14 +1,13 @@
 // pages/orderMng/orderMng.js
-
 var app = getApp()
- 
 Page({
   data: {
-     startDate:'',
-     endDate:'',
-     orderList:Array,
-     totalPage:0,
-     paras:null
+    baseUrl:'',
+    startDate:'',
+    endDate:'',
+    orderList:Array,
+    totalPage:0,
+    paras:null
   },
   onLoad:function(){
     var now = new Date();
