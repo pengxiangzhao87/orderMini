@@ -46,7 +46,7 @@
         <view wx:for="{{goodsPic}}"  style=" display: inline-block;" wx:for-index="idx" wx:key="s_id" wx:for-item="url">
           <view style="height:80px;width:80px;position: relative;margin-right:10px;">
             <image style="height:15px;width:15px;top:0px;right:0px;position: absolute;" bindtap="deletePic" data-idx="{{idx}}" src="/image/delete.png"></image>
-            <image style="height:80px;width:80px;margin-left:5px;" mode="aspectFit" src="{{url}}" ></image>
+            <image style="height:80px;width:80px;margin-left:5px;" bindtap="enlargementPic" data-url="{{url}}" mode="aspectFit" src="{{url}}" ></image>
           </view>
         </view>
       </scroll-view>
@@ -57,7 +57,7 @@
     </view>
     <view hidden="{{videoUrl==''}}">
       <view style="margin-left:80px;height:80px;display:flex;justify-content: center;">
-        <video style="width:80px;height:80px;" src="{{videoUrl}}"></video>
+        <video style="width:80px;height:80px;" muted="true" show-mute-btn="true" object-fit="contain" src="{{videoUrl}}"></video>
         <button style="margin-left:20px;margin-top:20px;padding:0 0 0 0;height:30px;width:80px;font-size:12px;align-items: center;display:flex;justify-content: center;" bindtap="deleteVideo">删除视频</button>
       </view>
     </view>
@@ -70,7 +70,7 @@
         <view wx:for="{{goodsDesc}}"  style=" display: inline-block;" wx:for-index="idx" wx:key="s_id" wx:for-item="url">
           <view style="height:80px;width:80px;position: relative;margin-right:10px;">
             <image style="height:15px;width:15px;top:0px;right:0px;position: absolute;" bindtap="deleteDesc" data-idx="{{idx}}" src="/image/delete.png"></image>
-            <image style="height:80px;width:80px;margin-left:5px;" mode="aspectFit" src="{{url}}" ></image>
+            <image style="height:80px;width:80px;margin-left:5px;" mode="aspectFit" bindtap="enlargementDesc" data-url="{{url}}" src="{{url}}" ></image>
           </view>
         </view>
       </scroll-view>

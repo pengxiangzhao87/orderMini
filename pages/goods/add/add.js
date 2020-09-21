@@ -238,7 +238,7 @@ Page({
   },
   uploadMulti:function(that,baseUrl,sId){
     var goodsPic = that.data.goodsPic;
-    var proPic;
+    var proPic='';
     if(goodsPic.length>0){
       proPic = goodsPic.map((url, index) => {
           return new Promise(function(resolve, reject) {
@@ -261,7 +261,7 @@ Page({
       });
     }
     var goodsDesc = that.data.goodsDesc;
-    var proDesc;
+    var proDesc='';
     if(goodsDesc.length>0){
         proDesc = goodsDesc.map((url, index) => {
           return new Promise(function(resolve, reject) {
@@ -283,7 +283,7 @@ Page({
       });
     }
     var videoUrl = that.data.videoUrl;
-    var proVideo;
+    var proVideo='';
     if(videoUrl!=''){
       proVideo =  new Promise(function(resolve, reject) {
         setTimeout(() => {
@@ -317,11 +317,27 @@ Page({
         }
       })
     }).catch(function(err) {});
+  },
+ 
+  enlargementPic:function(e){
+    var url = e.currentTarget.dataset.url;
+    var that = this;
+    var goodsPic = that.data.goodsPic;
+    wx.previewImage({
+      current: url, // 当前显示图片的http链接
+      urls: goodsPic // 需要预览的图片http链接列表
+    })
+  },
 
-
-
-     
-  }
+  enlargementDesc:function(e){
+    var url = e.currentTarget.dataset.url;
+    var that = this;
+    var goodsDesc = that.data.goodsDesc;
+    wx.previewImage({
+      current: url, // 当前显示图片的http链接
+      urls: goodsDesc // 需要预览的图片http链接列表
+    })
+  },
    
 
 })

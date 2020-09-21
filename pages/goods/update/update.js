@@ -218,6 +218,41 @@ Page({
   updateGood:function(e){
     var that= this;
     var e = e.detail.value;
+    if(e.sName==''){
+      wx.showToast({
+        icon:'none',
+        title: '商品名称，不能为空'
+      })
+      return;
+    }
+    if(e.sPrice==''){
+      wx.showToast({
+        icon:'none',
+        title: '商品价格，不能为空'
+      })
+      return;
+    }
+    if(e.sUnit==''){
+      wx.showToast({
+        icon:'none',
+        title: '商品单位，不能为空'
+      })
+      return;
+    }
+    if(e.priceUnit==''){
+      wx.showToast({
+        icon:'none',
+        title: '商品单价，不能为空'
+      })
+      return;
+    }
+    if(e.initNum==''){
+      wx.showToast({
+        icon:'none',
+        title: '初始数量，不能为空'
+      })
+      return;
+    }
     wx.showModal({
       content: '确定保存修改吗',
       success (res) {
@@ -384,5 +419,24 @@ Page({
     
     
      
-  }
+  },
+  enlargementPic:function(e){
+    var url = e.currentTarget.dataset.url;
+    var that = this;
+    var goodsPic = that.data.goodsPic;
+    wx.previewImage({
+      current: url, // 当前显示图片的http链接
+      urls: goodsPic // 需要预览的图片http链接列表
+    })
+  },
+
+  enlargementDesc:function(e){
+    var url = e.currentTarget.dataset.url;
+    var that = this;
+    var goodsDesc = that.data.goodsDesc;
+    wx.previewImage({
+      current: url, // 当前显示图片的http链接
+      urls: goodsDesc // 需要预览的图片http链接列表
+    })
+  },
 })
