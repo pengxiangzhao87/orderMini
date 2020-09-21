@@ -27,17 +27,19 @@
       <view class="left">商品单位</view>
       <input style="margin-left:10px;width:100%;" name="sUnit" type="text" value=""/>
     </view>
-    <view class="row">
-      <view class="left">售卖方式</view>
-      <picker style="width:200px;" mode="selector" bindtap="hideBoard" range="{{unitList}}" value="{{unitIdx}}" range-key="{{'name'}}" bindchange="changeUnit"><input disabled="true" style="padding-left:5px;border:0.5px solid #999999;" name="initUnit" value="{{unitList[unitIdx].name}}"></input></picker>
-    </view>
-    <view class="row">
-      <view class="left">商品单价</view>
-      <input style="margin-left:10px;width:100%;" name="priceUnit" type="digit" value=""/>
-    </view>
-    <view class="row">
-      <view class="left">初始数量</view>
-      <input style="margin-left:10px;width:100%;" name="initNum" type="number" value=""/>
+    <view hidden="{{sId==2}}">
+      <view class="row">
+        <view class="left">售卖方式</view>
+        <picker style="width:200px;" mode="selector" bindtap="hideBoard" range="{{unitList}}" value="{{unitIdx}}" range-key="{{'name'}}" bindchange="changeUnit"><input disabled="true" style="padding-left:5px;border:0.5px solid #999999;" name="initUnit" value="{{unitList[unitIdx].name}}"></input></picker>
+      </view>
+      <view class="row">
+        <view class="left">商品单价</view>
+        <input style="margin-left:10px;width:50%;" name="priceUnit" type="digit" value=""/><view style="margin-left:5px;">{{unitIdx==0?'/50g':'/个'}}</view>
+      </view>
+      <view class="row">
+        <view class="left">初始数量</view>
+        <input style="margin-left:10px;width:100%;" placeholder="{{unitIdx==0?'300g':'3个'}}" name="initNum" type="number" value=""/>
+      </view>
     </view>
     <view class="row">
       <view class="left">商品图片</view>

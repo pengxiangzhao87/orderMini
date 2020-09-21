@@ -3,6 +3,7 @@ var app = getApp()
 Page({
 
   data: {
+    sId:0,
     baseUrl:'',
     goodsPic:[],
     videoUrl:'',
@@ -29,6 +30,7 @@ Page({
     var that = this;
     var baseUrl = app.globalData.baseUrl;
     that.setData({
+      sId:wx.getStorageSync('sId'),
       baseUrl:baseUrl
     })
     wx.request({
@@ -195,19 +197,21 @@ Page({
       })
       return;
     }
-    if(e.priceUnit==''){
-      wx.showToast({
-        icon:'none',
-        title: '商品单价，不能为空'
-      })
-      return;
-    }
-    if(e.initNum==''){
-      wx.showToast({
-        icon:'none',
-        title: '初始数量，不能为空'
-      })
-      return;
+    if(that.data.sId==1){
+      if(e.priceUnit==''){
+        wx.showToast({
+          icon:'none',
+          title: '商品单价，不能为空'
+        })
+        return;
+      }
+      if(e.initNum==''){
+        wx.showToast({
+          icon:'none',
+          title: '初始数量，不能为空'
+        })
+        return;
+      }
     }
     if(that.data.goodsPic.length==0){
       wx.showToast({
@@ -229,10 +233,16 @@ Page({
           var activeList = that.data.activeList;
           var activeIdx = that.data.activeIdx;
           e.isActive = activeList[activeIdx].isActive;
-          var unitList = that.data.unitList;
-          var unitIdx = that.data.unitIdx;
-          e.initUnit = unitList[unitIdx].id;
           e.pId = wx.getStorageSync('sId');
+          if(e.pId==2){
+            e.initUnit = 1;
+            e.priceUnit = e.sPrice;
+            e.initNum = 1;
+          }else{
+            var unitList = that.data.unitList;
+            var unitIdx = that.data.unitIdx;
+            e.initUnit = unitList[unitIdx].id;
+          }
           if(that.data.activeIdx!=2){
             e.originalPrice='';
           }
