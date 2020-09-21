@@ -46,3 +46,8 @@
     <view class="del" catchtap="del" data-sid="{{item.s_id}}">删除</view>
   </view>
 </view>
+
+<view wx:if="{{goodsList.length==0}}">
+  <view style="display:flex;justify-content:center;color:#1296db;font-size:14px;margin-top:200px;">没有符合的商品~</view>
+</view>
+ 
