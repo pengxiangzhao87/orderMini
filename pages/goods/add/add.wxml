@@ -3,15 +3,21 @@
   <view style="margin-top:10px;background-color:#FFFFFF;color:#333333;font-size:14px;">
     <view class="row">
       <view class="left">商品分类</view>
-      <picker style="width:200px;" mode="selector" range="{{typeList}}" value="{{index}}" range-key="{{'tName'}}" bindchange="changeType"><input disabled="true" style="padding-left:5px;border:0.5px solid #999999;" name="tId" value="{{typeList[index].tName}}"></input></picker>
+      <picker style="width:200px;" mode="selector" bindtap="hideBoard" range="{{typeList}}" value="{{index}}" range-key="{{'tName'}}" bindchange="changeType"><input disabled="true" style="padding-left:5px;border:0.5px solid #999999;" name="tId" value="{{typeList[index].tName}}"></input></picker>
     </view>
     <view class="row">
       <view class="left">参加活动</view>
-      <picker style="width:200px;" mode="selector" range="{{activeList}}" value="{{activeIdx}}" range-key="{{'name'}}" bindchange="changeActive"><input disabled="true" style="padding-left:5px;border:0.5px solid #999999;" name="isActive" value="{{activeList[activeIdx].name}}"></input></picker>
+      <picker style="width:200px;" mode="selector" bindtap="hideBoard" range="{{activeList}}" value="{{activeIdx}}" range-key="{{'name'}}" bindchange="changeActive"><input disabled="true" style="padding-left:5px;border:0.5px solid #999999;" name="isActive" value="{{activeList[activeIdx].name}}"></input></picker>
     </view>
     <view class="row">
       <view class="left">商品名称</view>
       <input style="margin-left:10px;width:100%;" name="sName" type="text" value=""/>
+    </view>
+    <view hidden="{{activeIdx!=2}}">
+      <view class="row" >
+        <view class="left">商品原价</view>
+        <input style="margin-left:10px;width:100%;" name="originalPrice" type="digit" value=""/>
+      </view>
     </view>
     <view class="row">
       <view class="left">商品价格</view>
@@ -23,7 +29,7 @@
     </view>
     <view class="row">
       <view class="left">售卖方式</view>
-      <picker style="width:200px;" mode="selector" range="{{unitList}}" value="{{unitIdx}}" range-key="{{'name'}}" bindchange="changeUnit"><input disabled="true" style="padding-left:5px;border:0.5px solid #999999;" name="initUnit" value="{{unitList[unitIdx].name}}"></input></picker>
+      <picker style="width:200px;" mode="selector" bindtap="hideBoard" range="{{unitList}}" value="{{unitIdx}}" range-key="{{'name'}}" bindchange="changeUnit"><input disabled="true" style="padding-left:5px;border:0.5px solid #999999;" name="initUnit" value="{{unitList[unitIdx].name}}"></input></picker>
     </view>
     <view class="row">
       <view class="left">商品单价</view>

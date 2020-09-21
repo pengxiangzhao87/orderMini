@@ -174,6 +174,13 @@ Page({
       })
       return;
     }
+    if(that.data.activeIdx==2 && e.originalPrice==''){
+      wx.showToast({
+        icon:'none',
+        title: '商品原价，不能为空'
+      })
+      return;
+    }
     if(e.sPrice==''){
       wx.showToast({
         icon:'none',
@@ -202,6 +209,13 @@ Page({
       })
       return;
     }
+    if(that.data.goodsPic.length==0){
+      wx.showToast({
+        icon:'none',
+        title: '请上传商品图片，不能为空'
+      })
+      return;
+    }
     wx.showModal({
       content: '确定保存吗',
       success (res) {
@@ -219,6 +233,9 @@ Page({
           var unitIdx = that.data.unitIdx;
           e.initUnit = unitList[unitIdx].id;
           e.pId = wx.getStorageSync('sId');
+          if(that.data.activeIdx!=2){
+            e.originalPrice='';
+          }
           var baseUrl = that.data.baseUrl;
           wx.request({
             url: baseUrl+"commodity/addGoods",
@@ -338,6 +355,8 @@ Page({
       urls: goodsDesc // 需要预览的图片http链接列表
     })
   },
-   
+  hideBoard:function(){
+    wx.hideKeyboard();
+  }
 
 })

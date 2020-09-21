@@ -22,7 +22,7 @@
         "pagePath": "pages/index/index",
         "iconPath":"image/cl.png",
         "selectedIconPath":"image/cl_select.png",
-        "text": "待发货"
+        "text": "待处理"
       },{
         "pagePath": "pages/orderMng/orderMng",
         "iconPath":"image/mng.png",

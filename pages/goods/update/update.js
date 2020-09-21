@@ -79,7 +79,7 @@ Page({
           }
           
           var desc = [];
-          if(list.sDesc!=undefined){
+          if(list.sDesc!=undefined && list.sDesc!=''){
             var descList = list.sDesc.split('~');
             for(var idx in descList){
               var item = descList[idx];
@@ -88,9 +88,9 @@ Page({
           }
           
           var index = list.tId-1;
-          var activeIdx=list.isActive;
+          var activeIdx=list.isActive==3?2:list.isActive;
           var unitIdx=list.initUnit;
-          var videoUrl = list.sAddressVideo==''?'':baseUrl+'upload/'+list.sAddressVideo;
+          var videoUrl = (list.sAddressVideo==undefined || list.sAddressVideo=='')?'':baseUrl+'upload/'+list.sAddressVideo;
           that.setData({
             goodsPic:img,
             goodsDesc:desc,
@@ -225,6 +225,13 @@ Page({
       })
       return;
     }
+    if(that.data.activeIdx==2 && e.originalPrice==''){
+      wx.showToast({
+        icon:'none',
+        title: '商品原价，不能为空'
+      })
+      return;
+    }
     if(e.sPrice==''){
       wx.showToast({
         icon:'none',
@@ -253,6 +260,13 @@ Page({
       })
       return;
     }
+    if(that.data.goodsPic.length==0){
+      wx.showToast({
+        icon:'none',
+        title: '请上传商品图片，不能为空'
+      })
+      return;
+    }
     wx.showModal({
       content: '确定保存修改吗',
       success (res) {
@@ -260,10 +274,19 @@ Page({
           wx.showLoading({
             title: '数据上传中...',
           })
-          e.tId = that.data.index+1;
-          e.isActive = that.data.activeIdx;
-          e.initUnit = that.data.unitIdx;
+          var typeList = that.data.typeList;
+          var index = that.data.index;
+          e.tId = typeList[index].tId;
+          var activeList = that.data.activeList;
+          var activeIdx = that.data.activeIdx;
+          e.isActive = activeList[activeIdx].isActive;
+          var unitList = that.data.unitList;
+          var unitIdx = that.data.unitIdx;
+          e.initUnit = unitList[unitIdx].id;
           e.pId = wx.getStorageSync('sId');
+          if(that.data.activeIdx!=2){
+            e.originalPrice='';
+          }
           var baseUrl = that.data.baseUrl;
           var list = that.data.list;
           var sAddressImg = list.sAddressImg;
@@ -415,7 +438,7 @@ Page({
             }
           }
         })
-      }).catch(function(err) {console.info(err)});
+      }).catch(function(err) {});
     
     
      
@@ -439,4 +462,7 @@ Page({
       urls: goodsDesc // 需要预览的图片http链接列表
     })
   },
+  hideBoard:function(){
+    wx.hideKeyboard();
+  }
 })
