@@ -169,18 +169,18 @@ Page({
         var promise = Promise.all(tempFilePaths.map((tempFilePath, index) => {
             return new Promise(function(resolve, reject) {
               setTimeout(() => {
-              wx.uploadFile({
-                url: baseUrl+"order/uploadPics",
-                filePath: tempFilePath,
-                name: 'file',
-                formData: {'id':id},
-                success: function(res) {
-                  resolve(res.data);
-                },
-                fail: function(err) {
-                  reject(new Error('failed to upload file'));
-                }
-              });
+                wx.uploadFile({
+                  url: baseUrl+"order/uploadPics",
+                  filePath: tempFilePath,
+                  name: 'file',
+                  formData: {'id':id},
+                  success: function(res) {
+                    resolve(res.data);
+                  },
+                  fail: function(err) {
+                    reject(new Error('failed to upload file'));
+                  }
+                });
               }, 500)
             });
         }));
