@@ -89,7 +89,6 @@ Page({
   },
   uploadPic:function(){
     var that = this;
-    var baseUrl = that.data.baseUrl;
     wx.chooseImage({
       count: 5, // 默认9
       sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -117,7 +116,6 @@ Page({
   },
   uploadDesc:function(){
     var that = this;
-    var baseUrl = that.data.baseUrl;
     wx.chooseImage({
       count: 5, // 默认9
       sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -209,7 +207,7 @@ Page({
       success (res) {
         if (res.confirm) {
           wx.showLoading({
-            title: '上传中...',
+            title: '数据上传中...',
           })
           var typeList = that.data.typeList;
           var index = that.data.index;
@@ -220,6 +218,7 @@ Page({
           var unitList = that.data.unitList;
           var unitIdx = that.data.unitIdx;
           e.initUnit = unitList[unitIdx].id;
+          e.pId = wx.getStorageSync('sId');
           var baseUrl = that.data.baseUrl;
           wx.request({
             url: baseUrl+"commodity/addGoods",
@@ -304,9 +303,8 @@ Page({
       });
     }
     
-    var promise = Promise.all(proPic,proDesc,proVideo).then(function(results) {
+    Promise.all(proPic,proDesc,proVideo).then(function(results) {
       wx.hideLoading();
-      that.onShow();
       wx.showModal({
         content: '保存成功',
         showCancel:false,

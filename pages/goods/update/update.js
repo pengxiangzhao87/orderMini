@@ -8,7 +8,6 @@ Page({
     goodsPic:[],
     videoUrl:'',
     goodsDesc:[],
-    sId:0,
 
     typeList:[],
     index:0,
@@ -30,10 +29,6 @@ Page({
   onLoad:function(e){
     var that = this;
     var baseUrl = app.globalData.baseUrl;
-    that.setData({
-      baseUrl:baseUrl,
-      sId:e.sid
-    })
     wx.request({
       url: baseUrl+"commodity/queryCategoryList",
       method: 'get',
@@ -62,21 +57,17 @@ Page({
           four.name='折扣';
           activeList[2]=four;
           that.setData({
+            baseUrl:baseUrl,
             typeList:list,
             activeList:activeList
           })
         }
       } 
     })
-  },
-  onShow:function() {
-    var that = this;
-    var baseUrl = that.data.baseUrl;
-    var sid = that.data.sId;
     wx.request({
       url: baseUrl+"commodity/queryOneGoods",
       method: 'get',
-      data:{'sId':sid},
+      data:{'sId':e.sid},
       success(res) {
         if(res.data.code==200){
           var list = res.data.data;
@@ -86,22 +77,24 @@ Page({
             var item = imgList[idx];
             img[idx]=baseUrl+'upload/'+item;
           }
-          list.goodsPic = img;
-          var descList = list.sDesc.split('~');
+          
           var desc = [];
-          for(var idx in descList){
-            var item = descList[idx];
-            desc[idx]=baseUrl+'upload/'+item;
+          if(list.sDesc!=undefined){
+            var descList = list.sDesc.split('~');
+            for(var idx in descList){
+              var item = descList[idx];
+              desc[idx]=baseUrl+'upload/'+item;
+            }
           }
-          list.goodsDesc = desc;
+          
           var index = list.tId-1;
           var activeIdx=list.isActive;
           var unitIdx=list.initUnit;
           var videoUrl = list.sAddressVideo==''?'':baseUrl+'upload/'+list.sAddressVideo;
           that.setData({
-            videoUrl:videoUrl,
-            goodsDesc:desc,
             goodsPic:img,
+            goodsDesc:desc,
+            videoUrl:videoUrl,
             unitIdx:unitIdx,
             activeIdx:activeIdx,
             index:index,
@@ -111,6 +104,9 @@ Page({
         }
       }
     })
+  },
+  onShow:function() {
+    
   },
   changeType:function(e){
     var that = this;
@@ -150,25 +146,13 @@ Page({
       sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
       success: function (res) {
         var tempFilePaths = res.tempFilePaths;
-        var list = that.data.list;
-        var imgList = list.sAddressImg;
         var goodsPic = that.data.goodsPic;
-        console.info(goodsPic)
         for(var idx in tempFilePaths){
-          goodsPic.push(tempFilePaths[idx]);
-          if(imgList==''){
-            imgList += tempFilePaths[idx];
-          }else{
-            imgList += '~'+tempFilePaths[idx];
-          }
+          goodsPic.push(tempFilePaths[idx])
         }
-        list.sAddressImg = imgList;
-        console.info(goodsPic)
         that.setData({
-          list:list,
           goodsPic:goodsPic
         })
-        console.info(that.data.goodsPic)
       }
     })
   },
@@ -183,7 +167,6 @@ Page({
   },
   uploadDesc:function(){
     var that = this;
-    var baseUrl = that.data.baseUrl;
     wx.chooseImage({
       count: 5, // 默认9
       sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -232,28 +215,86 @@ Page({
       videoUrl:''
     })
   },
-  addGood:function(e){
+  updateGood:function(e){
     var that= this;
     var e = e.detail.value;
     wx.showModal({
-      content: '确定保存吗',
+      content: '确定保存修改吗',
       success (res) {
         if (res.confirm) {
           wx.showLoading({
-            title: '上传中...',
+            title: '数据上传中...',
           })
-          e.tId = that.data.index;
+          e.tId = that.data.index+1;
           e.isActive = that.data.activeIdx;
           e.initUnit = that.data.unitIdx;
+          e.pId = wx.getStorageSync('sId');
+          var baseUrl = that.data.baseUrl;
+          var list = that.data.list;
+          var sAddressImg = list.sAddressImg;
+          //删除的文件
+          var deletePic = "";
+          //商品图片地址
+          var goodsPic = that.data.goodsPic;
+          var keepPic = "";
+          var tmpPic = [];
+          for(var idx in goodsPic){
+            var item = goodsPic[idx];
+            if(item.indexOf("tmp") == -1){
+              var orginal = item.replace(baseUrl+"upload/","");
+              keepPic += orginal +'~';
+              sAddressImg = sAddressImg.replace(orginal+"~","");
+              sAddressImg = sAddressImg.replace("~"+orginal,"");
+              sAddressImg = sAddressImg.replace(orginal,"");
+            }else{
+              tmpPic.push(item);
+            }
+          }
+          goodsPic = tmpPic;
+          e.sAddressImg = keepPic==''?'':keepPic.substring(0,keepPic.length-1);
+          deletePic += sAddressImg==''?'':(sAddressImg + "~");
+          //商品描述地址
+          var sDesc = list.sDesc;
+          var goodsDesc = that.data.goodsDesc;
+          var keepDesc = "";
+          var tepDesc = [];
+          for(var idx in goodsDesc){
+            var item = goodsDesc[idx];
+            if(item.indexOf("tmp") == -1){
+              var orginal = item.replace(baseUrl+"upload/","");
+              keepDesc += orginal +'~';
+              sDesc = sDesc.replace(orginal,"");
+              sDesc = sDesc.replace(orginal+"~","");
+              sDesc = sDesc.replace("~"+orginal,"");
+            }else{
+              tepDesc.push(item);
+            }
+          }
+          goodsDesc = tepDesc;
+          e.sDesc = keepDesc==''?'':keepDesc.substring(0,keepDesc.length-1);
+          deletePic += sDesc==""?"":(sDesc + "~");
+          //视频地址
+          var sAddressVideo = list.sAddressVideo;
+          var videoUrl = that.data.videoUrl;
+          if(sAddressVideo!="" && sAddressVideo!=undefined){
+            if(videoUrl!='' && videoUrl.indexOf("tmp")==-1){
+              videoUrl="";
+            }else{
+              deletePic += list.sAddressVideo + "~";
+              e.sAddressVideo="";
+            }
+            
+          }
+          //删除的文件
+          deletePic = deletePic.substring(0,deletePic.length-1);
           var baseUrl = that.data.baseUrl;
           wx.request({
-            url: baseUrl+"commodity/addGoods",
+            url: baseUrl+"commodity/updateGoods",
             method: 'post',
-            data:e,
+            data:{"delete":deletePic,"model":e},
             success(res) {
               if(res.data.code==200){
-                var sId = res.data.data;
-                that.uploadMulti(that,baseUrl,sId);
+                that.uploadMulti(that,baseUrl,e.sId,goodsPic,goodsDesc,videoUrl);
               }
             }
           })
@@ -262,9 +303,8 @@ Page({
     })
 
   },
-  uploadMulti:function(that,baseUrl,sId){
-    var goodsPic = that.data.goodsPic;
-    var proPic;
+  uploadMulti:function(that,baseUrl,sId,goodsPic,goodsDesc,videoUrl){
+    var proPic = '';
     if(goodsPic.length>0){
       proPic = goodsPic.map((url, index) => {
           return new Promise(function(resolve, reject) {
@@ -286,8 +326,7 @@ Page({
           });
       });
     }
-    var goodsDesc = that.data.goodsDesc;
-    var proDesc;
+    var proDesc='';
     if(goodsDesc.length>0){
         proDesc = goodsDesc.map((url, index) => {
           return new Promise(function(resolve, reject) {
@@ -308,8 +347,7 @@ Page({
           });
       });
     }
-    var videoUrl = that.data.videoUrl;
-    var proVideo;
+    var proVideo='';
     if(videoUrl!=''){
       proVideo =  new Promise(function(resolve, reject) {
         setTimeout(() => {
@@ -329,21 +367,22 @@ Page({
       });
     }
     
-    var promise = Promise.all(proPic,proDesc,proVideo).then(function(results) {
-      wx.hideLoading();
-      that.onShow();
-      wx.showModal({
-        content: '保存成功',
-        showCancel:false,
-        success (res) {
-          if (res.confirm) {
-            wx.navigateBack({
-              delta: 1
-            })
+      Promise.all(proPic,proDesc,proVideo).then(function(results) {
+        wx.hideLoading();
+        wx.showModal({
+          content: '修改成功',
+          showCancel:false,
+          success (res) {
+            if (res.confirm) {
+              wx.navigateBack({
+                delta: 1
+              })
+            }
           }
-        }
-      })
-    }).catch(function(err) {});
+        })
+      }).catch(function(err) {console.info(err)});
+    
+    
      
   }
 })

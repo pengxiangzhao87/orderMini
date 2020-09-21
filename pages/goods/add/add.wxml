@@ -53,7 +53,7 @@
     </view>
     <view hidden="{{videoUrl==''}}">
       <view style="margin-left:80px;height:80px;display:flex;justify-content: center;">
-        <video style="width:80px;height:80px;" src="{{videoUrl}}"></video>
+        <video style="width:80px;height:80px;" duration="30" src="{{videoUrl}}"></video>
         <button style="margin-left:20px;margin-top:20px;padding:0 0 0 0;height:30px;width:80px;font-size:12px;align-items: center;display:flex;justify-content: center;" bindtap="deleteVideo">删除视频</button>
       </view>
     </view>

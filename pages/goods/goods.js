@@ -49,6 +49,7 @@ Page({
     var paras={};
     paras.tId = that.data.index;
     paras.tName = that.data.sName;
+    paras.pId = wx.getStorageSync('sId');
     var page = that.data.page;
     paras.page = page;
     paras.rows = page*20;
@@ -92,6 +93,7 @@ Page({
     var paras={};
     paras.tId = index;
     paras.tName = name;
+    paras.pId = wx.getStorageSync('sId')
     paras.page = 1;
     paras.rows = 20;
     wx.request({
@@ -196,28 +198,33 @@ Page({
     wx.showModal({
       content: '确定删除吗',
       success (res) {
-        var baseUrl = that.data.baseUrl;
-        var paras={};
-        paras.sId = sid;
-        paras.state = 0;
-        wx.request({
-          url: baseUrl+"commodity/deleteGoods",
-          data: paras,
-          method: 'get',
-          success(res) {
-            that.onShow();
-            wx.showToast({
-              icon:'none',
-              title: '删除成功'
-            })
-          },
-          fail(res) {
-            wx.showToast({
-              icon:'none',
-              title: '服务器异常'
-            })
-          }
-        })
+        if (res.confirm) {
+          wx.showLoading({
+            title: '数据删除中...',
+          })
+          var baseUrl = that.data.baseUrl;
+          var paras={};
+          paras.sId = sid;
+          paras.state = 0;
+          wx.request({
+            url: baseUrl+"commodity/deleteGoods",
+            data: paras,
+            method: 'get',
+            success(res) {
+              that.onShow();
+              wx.showToast({
+                icon:'none',
+                title: '删除成功'
+              })
+            },
+            fail(res) {
+              wx.showToast({
+                icon:'none',
+                title: '服务器异常'
+              })
+            }
+          })
+        }
       }
     })
     
