@@ -23,6 +23,5 @@ page{
 .left{
   display:flex;
   width:70px;
-  color:#666666;
 }
 

@@ -15,6 +15,7 @@
   <view class="head" style="margin-top:10px;">
     <view class="head-row">
       <button catchtap="toAdd" style="color:white;background-color:#1296db;height:25px;width:100px;font-size:14px;align-items: center;display:flex;justify-content: center;" >新增</button>
+      <button catchtap="showWin" style="color:white;background-color:#1296db;height:25px;width:120px;font-size:14px;align-items: center;display:flex;justify-content: center;" >绑定手机号</button>
       <button style="color:white;background-color:#1296db;height:25px;width:100px;font-size:14px;align-items: center;display:flex;justify-content: center;" form-type="submit">查询</button>
     </view>
   </view>
@@ -51,3 +52,21 @@
   <view style="display:flex;justify-content:center;color:#1296db;font-size:14px;margin-top:200px;">没有符合的商品~</view>
 </view>
  
+
+<view class="mask" bindtap="preventTouchMove" wx:if="{{showModal}}"></view>
+<form bindsubmit="bindingPhone"> 
+  <view class="modalDlg" wx:if="{{showModal}}">
+    <view class="row" style="margin-top:20px;" >
+      <view class="left">旧手机号</view>
+      <view style="margin-left:10px;">{{phone}}</view>
+    </view>
+    <view class="row" style="font-weight:bolder;">
+      <view class="left">新手机号</view>
+      <input style="margin-left:10px;width:110px;" name="phone" type="number" placeholder="请输入手机号"></input>
+    </view>
+    <view class="row" >
+      <button size="mini" bindtap="cancel">取消</button>
+      <button size="mini" type="primary" form-type="submit">绑定</button>
+    </view>
+  </view>
+</form>

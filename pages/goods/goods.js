@@ -9,7 +9,9 @@ Page({
     index:0,
     sName:'',
     totalPage:0,
-    page:1
+    page:1,
+    showModal: false,
+    phone:''
   },
   onLoad:function(){
     var that = this;
@@ -54,7 +56,7 @@ Page({
     paras.tName = that.data.sName;
     paras.pId = wx.getStorageSync('sId');
     var page = that.data.page;
-    paras.page = page;
+    paras.page = 1;
     paras.rows = page*20;
     wx.request({
       url: baseUrl+"commodity/queryGoods",
@@ -72,6 +74,46 @@ Page({
           that.setData({
             totalPage:pageAll,
             goodsList:list
+          })
+        }
+      },
+      fail(res) {
+        wx.showToast({
+          icon:'none',
+          title: '服务器异常'
+        })
+      }
+    })
+  },
+  //上拉获取新数据
+  onReachBottom:function(){
+    var that = this;
+    var baseUrl = that.data.baseUrl;
+    var paras={};
+    paras.tId = that.data.index;
+    paras.tName = that.data.sName;
+    paras.pId = wx.getStorageSync('sId');
+    var page = that.data.page+1;
+    paras.page = page;
+    paras.rows = 20;
+    wx.request({
+      url: baseUrl+"commodity/queryGoods",
+      data: paras,
+      method: 'get',
+      success(res) {
+        if(res.data.code==200){
+          var totalPage = res.data.data.totalPage;
+          var total = that.data.totalPage;
+          var pageAll = total==0?totalPage:total;
+          var result = res.data.data.list;
+          for(var index in result){
+            result[index].isTouchMove = false;
+          }
+          var list = that.data.goodsList.concat(result);
+          that.setData({
+            totalPage:pageAll,
+            goodsList:list,
+            page:page
           })
         }
       },
@@ -242,6 +284,67 @@ Page({
     wx.navigateTo({
       url: '/pages/goods/update/update?sid='+sid
     })
-  }
+  },
+
+  showWin: function() {
+    var that = this;
+    var baseUrl = that.data.baseUrl;
+    wx.request({
+      url: baseUrl+"supplier/getSupplier",
+      data: {'tId':wx.getStorageSync('sId')},
+      method: 'get',
+      success(res) {
+        that.setData({
+          phone:res.data.data.sPhone,
+          showModal: true
+        })
+      }
+    })
+    
+   },
+   
+   preventTouchMove: function() {
+    this.setData({
+      showModal: false
+    })
+   },
+   cancel: function() { 
+    this.setData({
+      showModal: false
+    })
+   },
+   bindingPhone:function(e){
+    var that = this;
+    var phone = e.detail.value.phone;
+    if(!(/^1(3|4|5|6|7|8|9)\d{9}$/.test(phone))){ 
+      wx.showToast({
+        icon:'none',
+        title: '手机号输入有误',
+      })
+      return false; 
+    } 
+    wx.showModal({
+      content: '确定绑定吗?',
+      success (res) {
+        if (res.confirm) {
+          var baseUrl = that.data.baseUrl;
+          wx.request({
+            url: baseUrl+"supplier/bindPhone",
+            data: {'sId':wx.getStorageSync('sId'),'phone':phone},
+            method: 'get',
+            success(res) {
+              that.setData({
+                showModal: false
+              })
+              wx.showToast({
+                title: '绑定成功'
+              })
+            }
+          })
+        }
+      }
+    })
+   }
+ 
 
 })

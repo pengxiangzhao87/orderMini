@@ -1,5 +1,5 @@
 <!--pages/goods/add/add.wxml-->
-<form id="aaa" bindsubmit="addGood">
+<form bindsubmit="addGood">
   <view style="margin-top:10px;background-color:#FFFFFF;color:#333333;font-size:14px;">
     <view class="row">
       <view class="left">商品分类</view>
@@ -38,7 +38,7 @@
       </view>
       <view class="row">
         <view class="left">初始数量</view>
-        <input style="margin-left:10px;width:100%;" placeholder="{{unitIdx==0?'300g':'3个'}}" name="initNum" type="number" value=""/>
+        <input style="margin-left:10px;width:50%;"  name="initNum" type="number" value=""/><view style="margin-left:5px;">{{unitIdx==0?'g':'个'}}</view>
       </view>
     </view>
     <view class="row">

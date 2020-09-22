@@ -13,7 +13,7 @@ Page({
     that.setData({
       baseUrl:baseUrl
     })
-    if(!wx.getStorageSync('sId')){
+    if(!wx.getStorageSync('sId') && !wx.getStorageSync('token')){
       that.userLogin(baseUrl);
     }else{
       wx.switchTab({
@@ -35,8 +35,8 @@ Page({
             if(res.data.code==200){
               var data = res.data.data;
               wx.setStorageSync('token', data.token);
-              wx.setStorageSync('isHidden', data.isHidden)
               if(data.sId!=undefined){
+                wx.setStorageSync('isHidden', data.isHidden)
                 wx.setStorageSync('sId', data.sId);
                 wx.switchTab({
                   url: '/pages/index/index',
