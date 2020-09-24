@@ -13,7 +13,7 @@ Page({
     that.setData({
       baseUrl:baseUrl
     })
-    if(!wx.getStorageSync('sId') && !wx.getStorageSync('token')){
+    if(!wx.getStorageSync('sId') || !wx.getStorageSync('token')){
       that.userLogin(baseUrl);
     }else{
       wx.switchTab({
