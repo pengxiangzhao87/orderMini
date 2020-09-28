@@ -308,7 +308,6 @@ Page({
           //商品图片地址
           var goodsPic = that.data.goodsPic;
           var keepPic = "";
-          var tmpPic = [];
           for(var idx in goodsPic){
             var item = goodsPic[idx];
             if(item.indexOf("tmp") == -1){
@@ -318,17 +317,16 @@ Page({
               sAddressImg = sAddressImg.replace("~"+orginal,"");
               sAddressImg = sAddressImg.replace(orginal,"");
             }else{
-              tmpPic.push(item);
-            }
+              keepPic += 'a~';
+            } 
           }
-          goodsPic = tmpPic;
+          // goodsPic = tmpPic;
           e.sAddressImg = keepPic==''?'':keepPic.substring(0,keepPic.length-1);
           deletePic += sAddressImg==''?'':(sAddressImg + "~");
           //商品描述地址
           var sDesc = list.sDesc;
           var goodsDesc = that.data.goodsDesc;
           var keepDesc = "";
-          var tepDesc = [];
           for(var idx in goodsDesc){
             var item = goodsDesc[idx];
             if(item.indexOf("tmp") == -1){
@@ -338,10 +336,10 @@ Page({
               sDesc = sDesc.replace(orginal+"~","");
               sDesc = sDesc.replace("~"+orginal,"");
             }else{
-              tepDesc.push(item);
+              keepDesc += 'a~';
             }
           }
-          goodsDesc = tepDesc;
+
           e.sDesc = keepDesc==''?'':keepDesc.substring(0,keepDesc.length-1);
           deletePic += sDesc==""?"":(sDesc + "~");
           //视频地址
@@ -378,13 +376,13 @@ Page({
     var proPic = '';
     if(goodsPic.length>0){
       proPic = goodsPic.map((url, index) => {
+        if(url.indexOf("tmp")!=-1){
           return new Promise(function(resolve, reject) {
-            setTimeout(() => {
               wx.uploadFile({
                 url: baseUrl+"commodity/addGoodsPic",
                 filePath: url,
                 name: 'file',
-                formData: {'sId':sId},
+                formData: {'sId':sId,'idx':index},
                 success: function(res) {
                   resolve(res.data);
                 },
@@ -392,21 +390,23 @@ Page({
                   reject(new Error('failed to upload file'));
                 }
               });
- 
-            }, 500)
+            
           });
+        }else{
+          return '';
+        }
       });
     }
     var proDesc='';
     if(goodsDesc.length>0){
         proDesc = goodsDesc.map((url, index) => {
-          return new Promise(function(resolve, reject) {
-            setTimeout(() => {
+          if(url.indexOf("tmp")!=-1){
+            return new Promise(function(resolve, reject) {
               wx.uploadFile({
                 url: baseUrl+"commodity/addGoodsDesc",
                 filePath: url,
                 name: 'file',
-                formData: {'sId':sId},
+                formData: {'sId':sId,'idx':index},
                 success: function(res) {
                   resolve(res.data);
                 },
@@ -414,8 +414,10 @@ Page({
                   reject(new Error('failed to upload file'));
                 }
               });
-            }, 500)
-          });
+            });
+          }else{
+            return '';
+          }
       });
     }
     var proVideo='';

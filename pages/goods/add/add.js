@@ -246,6 +246,16 @@ Page({
           if(that.data.activeIdx!=2){
             e.originalPrice='';
           }
+          var picStr = '';
+          that.data.goodsPic.forEach(function (v, i) {
+            picStr = picStr + 'a~';
+          })
+          e.sAddressImg=picStr.substring(0,picStr.length-1);
+          var descStr = '';
+          that.data.goodsDesc.forEach(function (v, i) {
+            descStr = descStr + 'a~';
+          })
+          e.sDesc = descStr.substring(0,descStr.length-1);
           var baseUrl = that.data.baseUrl;
           wx.request({
             url: baseUrl+"commodity/addGoods",
@@ -269,21 +279,18 @@ Page({
     if(goodsPic.length>0){
       proPic = goodsPic.map((url, index) => {
           return new Promise(function(resolve, reject) {
-            setTimeout(() => {
-              wx.uploadFile({
-                url: baseUrl+"commodity/addGoodsPic",
-                filePath: url,
-                name: 'file',
-                formData: {'sId':sId},
-                success: function(res) {
-                  resolve(res.data);
-                },
-                fail: function(err) {
-                  reject(new Error('failed to upload file'));
-                }
-              });
- 
-            }, 500)
+            wx.uploadFile({
+              url: baseUrl+"commodity/addGoodsPic",
+              filePath: url,
+              name: 'file',
+              formData: {'sId':sId,'idx':index},
+              success: function(res) {
+                resolve(res.data);
+              },
+              fail: function(err) {
+                reject(new Error('failed to upload file'));
+              }
+            });
           });
       });
     }
@@ -292,20 +299,18 @@ Page({
     if(goodsDesc.length>0){
         proDesc = goodsDesc.map((url, index) => {
           return new Promise(function(resolve, reject) {
-            setTimeout(() => {
-              wx.uploadFile({
-                url: baseUrl+"commodity/addGoodsDesc",
-                filePath: url,
-                name: 'file',
-                formData: {'sId':sId},
-                success: function(res) {
-                  resolve(res.data);
-                },
-                fail: function(err) {
-                  reject(new Error('failed to upload file'));
-                }
-              });
-            }, 500)
+            wx.uploadFile({
+              url: baseUrl+"commodity/addGoodsDesc",
+              filePath: url,
+              name: 'file',
+              formData: {'sId':sId,'idx':index},
+              success: function(res) {
+                resolve(res.data);
+              },
+              fail: function(err) {
+                reject(new Error('failed to upload file'));
+              }
+            });
           });
       });
     }

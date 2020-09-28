@@ -20,7 +20,7 @@ Page({
       baseUrl:baseUrl
     })
     wx.setNavigationBarTitle({
-      title: wx.getStorageSync('sId')==1?'田园鲜果':'水晶进口食品'
+      title: wx.getStorageSync('sId')==1?'田园生鲜':'水晶进口食品'
     })
     wx.request({
       url: baseUrl+"commodity/queryCategoryList",
