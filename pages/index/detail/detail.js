@@ -132,7 +132,7 @@ Page({
     param.id=id;
     param.isExtra=parseInt(flag);
     wx.request({
-      url: baseUrl+"order/changeIsExtra",
+      url: baseUrl+"order/changeIsExtra", 
       method: 'get',
       data: param,
       success: function(res) {
@@ -324,6 +324,13 @@ Page({
   },
   //确定发货
   sendGoods:function(){
+    wx.scanCode({
+      success (res) {
+        var result = res.result;
+        console.log(result)
+      }
+    })
+    return;
     var that = this;
     var list = that.data.list;
     if(list[0].order_status==3){
@@ -358,7 +365,6 @@ Page({
           var oid = that.data.oid;
           var param = {};
           param.oId = oid;
-          param.sId=wx.getStorageSync('sId');
           wx.request({
             url: baseUrl+"order/sendOrder",
             method: 'get',

@@ -9,7 +9,7 @@
     <view class="item" bindtap="toDetail" data-oid="{{item.o_id}}">
       <view class="row" style="margin-top:5px;">
         <view style="margin-left:10px;">时间：{{item.consignee_range_time}}</view>
-        <view style="color:red;margin-left:auto;margin-right:10px;">{{item.chargeback_status==1?'退单待处理':''}}</view>
+        <view style="color:red;margin-left:auto;margin-right:10px;">{{item.backStatus!=0?'退单待处理':''}}</view>
       </view>
       <view style="margin-top:5px;" class="row" >
         <view style="margin-left:10px;">{{item.consignee_name}}</view>
