@@ -287,20 +287,22 @@ Page({
   },
 
   showWin: function() {
-    var that = this;
-    var baseUrl = that.data.baseUrl;
-    wx.request({
-      url: baseUrl+"supplier/getSupplier",
-      data: {'tId':wx.getStorageSync('sId')},
-      method: 'get',
-      success(res) {
-        that.setData({
-          phone:res.data.data.sPhone,
-          showModal: true
-        })
-      }
+    wx.navigateTo({
+      url: '/pages/goods/setting/setting',
     })
-    
+    // var that = this;
+    // var baseUrl = that.data.baseUrl;
+    // wx.request({
+    //   url: baseUrl+"supplier/getSupplier",
+    //   data: {'tId':wx.getStorageSync('sId')},
+    //   method: 'get',
+    //   success(res) {
+    //     that.setData({
+    //       phone:res.data.data.sPhone,
+    //       showModal: true
+    //     })
+    //   }
+    // })
    },
    
    preventTouchMove: function() {
