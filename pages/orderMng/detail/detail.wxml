@@ -92,9 +92,13 @@
 
     <view style="background-color: #FFFFFF;width:100%;font-size:14px;padding-top:10px;padding-bottom:10px;">
       <view class="total_row" style="margin-top:0px;">
-        <text>实付金额合计</text><text style="margin-right:10px;margin-left:auto;color:green">￥{{totalPay}}</text>
+        <text>商品金额合计</text><text style="margin-right:10px;margin-left:auto;color:green">￥{{totalPay}}</text>
       </view>
-
+      <view hidden="{{list[0].post_cost==0}}">
+        <view class="total_row">
+          <text>运费</text><text style="margin-right:10px;margin-left:auto;color:green">￥{{list[0].post_cost}}</text>
+        </view>
+      </view>
       <view hidden="{{isHidden==1}}">
         <view hidden="{{extraPay==0}}">
           <view class="total_row">
@@ -137,8 +141,17 @@
 
     <view style="background-color: #FFFFFF;width:100%;font-size:14px;padding-top:10px;padding-bottom:10px;margin-top:10px;">
       <view class="total_row" style="margin-top:0px;">
-        <text>订单号</text><text style="margin-right:10px;margin-left:auto;" >{{list[0].o_id}}<text bindtap="copy" data-oid="{{info.o_id}}" style="color:#1296db;" decode="true">&nbsp;复制</text></text>
+        <text>订单号</text><text style="margin-right:10px;margin-left:auto;" >{{list[0].o_id}}<text bindtap="copy" data-oid="{{list[0].o_id}}" style="color:#1296db;" decode="true">&nbsp;复制</text></text>
       </view>
+      <view hidden="{{list[0].express_no==undefined}}">
+        <view class="total_row" style="margin-top:0px;">
+          <text>物流</text><text style="margin-right:10px;margin-left:auto;" >{{list[0].express_type}}</text>
+        </view>
+        <view class="total_row" style="margin-top:0px;">
+          <text>物流单号</text><text style="margin-right:10px;margin-left:auto;" >{{list[0].express_no}}<text bindtap="copyExpress" data-no="{{list[0].express_no}}" style="color:#1296db;" decode="true">&nbsp;复制</text></text>
+        </view>
+      </view>
+      
       <view class="total_row">
         <text>送达时间</text><text style="margin-right:10px;margin-left:auto;">{{list[0].last_time}}</text>
       </view>

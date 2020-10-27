@@ -25,7 +25,24 @@ Page({
         name:'个数'
       }
     ],
-    unitIdx:0
+    unitIdx:0,
+
+    areaList:[
+      {
+        id:3,
+        area:'无限制'
+      },{
+        id:0,
+        area:'即时配送'
+      },{
+        id:1,
+        area:'北京'
+      },{
+        id:2,
+        area:'京津冀'
+      }
+    ],
+    areaIdx:0,
   },
   onLoad:function(e){
     var that = this;
@@ -92,6 +109,7 @@ Page({
           var index = list.tId-1;
           var activeIdx=list.isActive==3?2:list.isActive;
           var unitIdx=list.initUnit;
+          var areaIdx = list.deliveryArea==3?0:list.deliveryArea+1;
           var videoUrl = (list.sAddressVideo==undefined || list.sAddressVideo=='')?'':baseUrl+'upload/'+list.sAddressVideo;
           that.setData({
             goodsPic:img,
@@ -100,7 +118,8 @@ Page({
             unitIdx:unitIdx,
             activeIdx:activeIdx,
             index:index,
-            list:list
+            list:list,
+            areaIdx:areaIdx
           })
            
         }
@@ -138,6 +157,20 @@ Page({
     that.setData({
       list:list,
       unitIdx:value
+    })
+  },
+  changeArea:function(e){
+    this.setData({
+      areaIdx:e.detail.value
+    })
+
+    var that = this;
+    var value = e.detail.value;
+    var list = that.data.list;
+    list.deliveryArea=value;
+    that.setData({
+      list:list,
+      areaIdx:value
     })
   },
   uploadPic:function(){
@@ -284,6 +317,9 @@ Page({
           var activeList = that.data.activeList;
           var activeIdx = that.data.activeIdx;
           e.isActive = activeList[activeIdx].isActive;
+          var areaList = that.data.areaList;
+          var areaIdx = that.data.areaIdx;
+          e.deliveryArea = areaList[areaIdx].id;
           e.pId = wx.getStorageSync('sId');
           if(e.pId==2){
             e.initUnit = 1;

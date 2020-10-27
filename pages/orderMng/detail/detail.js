@@ -44,7 +44,6 @@ Page({
     var baseUrl = app.globalData.baseUrl;
     var paras = {};
     paras.oId=that.data.oid;
-    paras.sId=wx.getStorageSync('sId');
     wx.request({
       url: baseUrl+"order/selectPenderDetail",
       method: 'get',
@@ -83,7 +82,7 @@ Page({
               }
             }
           }
-          var totalGet =(totalPay+(data[0].extra_status==1?extraPay:0)-(data[0].back_price_status==2?extraBack:0)-chargeback-chargebackPay+chargebackBack).toFixed(2);
+          var totalGet =(totalPay+(data[0].extra_status==1?extraPay:0)-(data[0].back_price_status==2?extraBack:0)-chargeback-chargebackPay+chargebackBack+data[0].post_cost).toFixed(2);
           totalPay = totalPay.toFixed(2);
           extraPay = extraPay.toFixed(2);
           extraBack = extraBack.toFixed(2);
@@ -128,5 +127,12 @@ Page({
       data: oid,
       success (res) {}
     })
-  } 
+  },
+  copyExpress:function(e){
+    var no = e.currentTarget.dataset.no+'';
+    wx.setClipboardData({
+      data: no,
+      success (res) {}
+    })
+  }
 })

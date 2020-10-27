@@ -4,11 +4,24 @@
     <view class="head-row">
       <view style="display: flex; flex-direction: row;margin-left:10px;align-items: center;">
         <view style="width:70px;">开始时间：</view>
-        <picker style="width:100px;" mode="date" bindchange="changeStart"><input disabled="true" style="padding-left:5px;border:0.5px solid #999999;" name="startDate" value="{{startDate}}"></input></picker>
+        <picker style="width:100px;" mode="date" bindchange="changeStart"><input disabled="true" style="padding-left:5px;border:0.5px solid #999999;" name="startDate" value="{{paras.startDate}}"></input></picker>
       </view>
       <view style="display: flex; flex-direction:row;margin-left:20px;">
         <view style="width:70px;">结束时间：</view>
-        <picker style="width:100px;" mode="date" bindchange="changeEnd"><input disabled="true" style="padding-left:5px;border:0.5px solid #999999;" name="endDate" value="{{endDate}}"></input></picker>
+        <picker style="width:100px;" mode="date" bindchange="changeEnd"><input disabled="true" style="padding-left:5px;border:0.5px solid #999999;" name="endDate" value="{{paras.endDate}}"></input></picker>
+      </view>
+    </view>
+  </view>
+
+  <view class="head" style="margin-top:10px;">
+    <view class="head-row">
+      <view style="display: flex; flex-direction: row;margin-left:10px;align-items: center;">
+        <view style="width:60px;">收件人：</view>
+        <input style="padding-left:5px;border:0.5px solid #999999;width:100px;" name="name" value="{{paras.name}}"></input>
+      </view>
+      <view style="display: flex; flex-direction:row;margin-left:20px;">
+        <view style="width:70px;">收件电话：</view>
+        <input style="padding-left:5px;border:0.5px solid #999999;width:100px;" name="phone" value="{{paras.phone}}"></input>
       </view>
     </view>
   </view>
@@ -16,7 +29,7 @@
   <view class="head" style="margin-top:10px;">
     <view class="head-row">
       <view style="display: flex; flex-direction:row;margin-left:10px;">
-        <view style="width:70px;">商品名称：</view><input style="padding-left:5px;border:0.5px solid #999999;" placeholder="请输入商品名称" placeholder-style="font-size:12px;color:#999999;" name="name" ></input>
+        <view style="width:70px;">订单号：</view><input style="padding-left:5px;border:0.5px solid #999999;" placeholder="请输入商品名称" placeholder-style="font-size:12px;color:#999999;" name="oId" value="{{paras.oId}}" ></input>
       </view>
       <button style="color:white;background-color:#1296db;height:25px;width:100px;font-size:14px;align-items: center;display:flex;justify-content: center;" form-type="submit">查询</button>
     </view>
@@ -26,19 +39,19 @@
 
 <view class="body">
   <view class="body-row">
-    <view style="color:white;display:flex;justify-content: center;width:20%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;">订单编号</view>
-    <view style="color:white;display:flex;justify-content: center;width:30%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">订单日期</view>
-    <view style="color:white;display:flex;justify-content: center;width:15%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">状态</view>
+    <view style="color:white;display:flex;justify-content: center;width:25%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;">订单编号</view>
+    <view style="color:white;display:flex;justify-content: center;width:20%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">订单日期</view>
     <view style="color:white;display:flex;justify-content: center;width:15%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">收货人</view>
-    <view style="color:white;display:flex;justify-content: center;width:20%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">商品金额</view>
+    <view style="color:white;display:flex;justify-content: center;width:25%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">收货电话</view>
+    <view style="color:white;display:flex;justify-content: center;width:15%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">状态</view>
   </view>
   <view wx:for="{{orderList}}" wx:for-index="idx" wx:key="oid" wx:for-item="item">
     <view class="item-row" bindtap="clickRow" data-oid="{{item.o_id}}">
-      <view style="align-items: center;height:30px;display:flex;justify-content: center;width:20%;border-bottom:0.5px solid #999999;">{{item.o_id}}</view>
-      <view style="align-items: center;height:30px;display:flex;justify-content: center;width:30%;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999;font-size:10px;">{{item.orderTime}}</view>
-      <view style="align-items: center;height:30px;display:flex;justify-content: center;width:15%;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">{{item.STATUS}}</view>
+      <view style="align-items: center;height:30px;display:flex;justify-content: center;width:25%;border-bottom:0.5px solid #999999;">{{item.o_id}}</view>
+      <view style="align-items: center;height:30px;display:flex;justify-content: center;width:20%;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999;">{{item.orderTime}}</view>
       <view style="align-items: center;height:30px;display:flex;justify-content: center;width:15%;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">{{item.consignee_name}}</view>
-      <view style="align-items: center;height:30px;display:flex;justify-content: center;width:20%;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">￥{{item.totalPrice}}</view>
+      <view style="align-items: center;height:30px;display:flex;justify-content: center;width:25%;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">￥{{item.consignee_phone}}</view>
+      <view style="align-items: center;height:30px;display:flex;justify-content: center;width:15%;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">{{item.STATUS}}</view>
     </view>
   </view>
 </view>

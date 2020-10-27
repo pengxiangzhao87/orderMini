@@ -24,7 +24,24 @@ Page({
         name:'个数'
       }
     ],
-    unitIdx:0
+    unitIdx:0,
+    
+    areaList:[
+      {
+        id:3,
+        area:'无限制'
+      },{
+        id:0,
+        area:'即时配送'
+      },{
+        id:1,
+        area:'北京'
+      },{
+        id:2,
+        area:'京津冀'
+      }
+    ],
+    areaIdx:0,
   },
   onLoad:function(){
     var that = this;
@@ -87,6 +104,11 @@ Page({
   changeUnit:function(e){
     this.setData({
       unitIdx:e.detail.value
+    })
+  },
+  changeArea:function(e){
+    this.setData({
+      areaIdx:e.detail.value
     })
   },
   uploadPic:function(){
@@ -233,6 +255,10 @@ Page({
           var activeList = that.data.activeList;
           var activeIdx = that.data.activeIdx;
           e.isActive = activeList[activeIdx].isActive;
+          var areaList = that.data.areaList;
+          var areaIdx = that.data.areaIdx;
+          e.deliveryArea = areaList[areaIdx].id;
+         
           e.pId = wx.getStorageSync('sId');
           if(e.pId==2){
             e.initUnit = 1;
@@ -373,5 +399,4 @@ Page({
   hideBoard:function(){
     wx.hideKeyboard();
   }
-
 })

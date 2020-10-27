@@ -1,67 +1,53 @@
 <!--pages/goods/setting/setting.wxml-->
-
-<view class="contain" style="display:flex; align-items: center;flex-direction: row ;height:42px;">
-  <view class="left" style="margin-left:10px;">手机号</view>
-  <input name="name" type="number" placeholder="联系您的手机号" disabled="true" bindblur="changeName" placeholder-style="color:#999999;font-size:12px;" value="{{address.name}}"/>
-  <button catchtap="showWin" style="color:white;background-color:#1296db;height:25px;width:120px;font-size:10px;align-items: center;display:flex;justify-content: center;padding:0 0 0 0 ;margin-left:auto;margin-right:10px;" >绑定手机号</button>
-</view>
-
 <view class="contain">
-  <form bindsubmit="bindingPhone"> 
+  <form bindsubmit="saveSupplier"> 
+    <view class="row">
+      <view class="left">手机号</view>
+      <input name="sPhone" type="number"  bindblur="changePhone"  placeholder="联系您的手机号" placeholder-style="color:#999999;font-size:12px;" value="{{supplier.sPhone}}"/>
+    </view>
     <view style="display:flex;align-items: center;flex-direction:row;height:42px;margin-left:10px;color:#1296db;font-size:14px;width:160px;">即时配送设置(4公里以内)</view>
 
     <view class="row">
       <view class="left">起送价格</view>
-      <input name="phone" type="number" placeholder="联系您的手机号" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{address.phone}}"/>
+      <input name="shortStart" type="digit"  bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{supplier.shortStart}}"/>元
     </view>
     <view class="row">
       <view class="left">运费</view>
-      <input name="phone" type="number" placeholder="联系您的手机号" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{address.phone}}"/>
+      <input name="shortDeal" type="digit" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{supplier.shortDeal}}"/>元
     </view>
     <view class="row">
       <view class="left">包邮价格</view>
-      <input name="phone" type="number" placeholder="联系您的手机号" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{address.phone}}"/>
+      <input name="shortFree" type="digit" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{supplier.shortFree}}"/>元
     </view>
     <view style="display:flex;align-items: center;flex-direction:row;height:42px;margin-left:10px;color:#1296db;font-size:14px;width:160px;">同城配送设置(北京)</view>
     <view class="row">
       <view class="left">起送价格</view>
-      <input name="phone" type="number" placeholder="联系您的手机号" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{address.phone}}"/>
+      <input name="cityStart" type="digit" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{supplier.cityStart}}"/>元
     </view>
     <view class="row">
       <view class="left">运费</view>
-      <input name="phone" type="number" placeholder="联系您的手机号" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{address.phone}}"/>
+      <input name="cityDeal" type="digit" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{supplier.cityDeal}}"/>元
     </view>
     <view class="row">
       <view class="left">包邮价格</view>
-      <input name="phone" type="number" placeholder="联系您的手机号" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{address.phone}}"/>
+      <input name="cityFree" type="digit" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{supplier.cityFree}}"/>元
     </view>
     <view style="display:flex;align-items: center;flex-direction:row;height:42px;margin-left:10px;color:#1296db;font-size:14px;width:120px;">全国配送设置</view>
     <view class="row">
       <view class="left">起送价格</view>
-      <input name="phone" type="number" placeholder="联系您的手机号" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{address.phone}}"/>
+      <input name="longStart" type="digit" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{supplier.longStart}}"/>元
     </view>
     <view class="row">
       <view class="left">运费</view>
-      <input name="phone" type="number" placeholder="联系您的手机号" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{address.phone}}"/>
+      <input name="longDeal" type="digit" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{supplier.longDeal}}"/>元
     </view>
     <view class="row">
       <view class="left">包邮价格</view>
-      <input name="phone" type="number" placeholder="联系您的手机号" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{address.phone}}"/>
+      <input name="longFree" type="digit" bindblur="changePhone" placeholder-style="color:#999999;font-size:12px;" value="{{supplier.longFree}}"/>元
     </view>
+
+    <input hidden="true" name="sId" value="{{supplier.sId}}"/>
+    <button style="background-color:#1296db;color:#ffffff;width:96%;margin-left:2%;margin-top:20px;margin-bottom:10px;" form-type="submit" >保存</button>
   </form>  
 </view>
-
-
-<view class="mask" bindtap="preventTouchMove" wx:if="{{showModal}}"></view>
-<form bindsubmit="bindingPhone"> 
-  <view class="modalDlg" wx:if="{{showModal}}">
-    <view class="modal-row" style="font-weight:bolder;">
-      <view class="left">新手机号</view>
-      <input style="margin-left:10px;width:110px;" name="phone" type="number" placeholder="请输入手机号"></input>
-    </view>
-    <view class="modal-row" >
-      <button size="mini" bindtap="cancel">取消</button>
-      <button size="mini" type="primary" form-type="submit">绑定</button>
-    </view>
-  </view>
-</form>
+ 

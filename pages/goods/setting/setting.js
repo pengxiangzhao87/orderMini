@@ -3,8 +3,9 @@ var util= require('../../../utils/util.js');
 var app = getApp()
 Page({
   data: {
+    baseUrl:'',
+    supplier:{},
     showModal: false,
-    phone:''
   },
 
   /**
@@ -17,7 +18,7 @@ Page({
       baseUrl:baseUrl
     })
   },
-  showWin: function() {
+  onShow(){
     var that = this;
     var baseUrl = that.data.baseUrl;
     wx.request({
@@ -26,10 +27,33 @@ Page({
       method: 'get',
       success(res) {
         that.setData({
-          phone:res.data.data.sPhone,
-          showModal: true
+          supplier:res.data.data
         })
       }
     })
-   },
+  },
+  saveSupplier(e){
+    var that = this;
+    var baseUrl = that.data.baseUrl;
+    wx.request({
+      url: baseUrl+"supplier/uploadSupplier",
+      method: 'post',
+      data:e.detail.value,
+      success(res) {
+        if(res.data.code==200){
+          wx.showModal({
+            content: '保存成功',
+            showCancel:false,
+            success (res) {
+              if (res.confirm) {
+                wx.navigateBack({
+                  delta: 1
+                })
+              }
+            }
+          })
+        }
+      }
+    })
+  } 
 })

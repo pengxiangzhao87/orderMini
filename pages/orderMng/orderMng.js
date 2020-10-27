@@ -3,35 +3,30 @@ var app = getApp()
 Page({
   data: {
     baseUrl:'',
-    startDate:'',
-    endDate:'',
     orderList:Array,
     totalPage:0,
-    paras:null
+    paras:{}
   },
   onLoad:function(){
     var now = new Date();
     var month = now.getMonth()+1;
     var day = now.getDate();
     var nowDate = now.getFullYear() + '-' + (month<10?'0'+month:month) + '-' + (day<10?'0'+day:day);
+    var paras = {};
+    paras.startDate = nowDate;
+    paras.endDate = nowDate;
     this.setData({
       baseUrl:app.globalData.baseUrl,
-      startDate:nowDate,
-      endDate:nowDate
+      paras:paras
     })
   },
   onShow: function () {
     var that = this;
     var baseUrl = that.data.baseUrl;
     var paras = that.data.paras;
-    if(paras==null){
-      paras = {};
-      paras.sId=wx.getStorageSync('sId');
-      paras.startDate=that.data.startDate + ' 00:00:00';
-      paras.endDate=that.data.endDate + ' 23:59:59';
-      paras.pageNo=1;
-      paras.pageSize=20;
-    }
+    paras.sId=wx.getStorageSync('sId');
+    paras.pageNo=1;
+    paras.pageSize=20;
     that.getOrderList(that,baseUrl,paras);
   },
   getOrderList:function(that,baseUrl,paras){
@@ -40,6 +35,8 @@ Page({
       method: 'get',
       data: paras,
       success(res) {
+        paras.startDate = paras.startDate.substring(0,10);
+        paras.endDate = paras.endDate.substring(0,10);
         if(res.data.code==200){
           that.setData({
             orderList:res.data.data.list,
@@ -93,13 +90,19 @@ Page({
     }
   },
   changeStart: function (e) {
-    this.setData({
-      startDate:e.detail.value
+    var that = this;
+    var paras = that.data.paras;
+    paras.startDate = e.detail.value
+    that.setData({
+      paras:paras
     })
   },
   changeEnd:function(e){
-    this.setData({
-      endDate:e.detail.value
+    var that = this;
+    var paras = that.data.paras;
+    paras.endDate = e.detail.value
+    that.setData({
+      paras:paras
     })
   },
   checkOrder:function(e){
@@ -109,7 +112,9 @@ Page({
     paras.sId=wx.getStorageSync('sId');
     paras.startDate=e.detail.value.startDate+ ' 00:00:00';
     paras.endDate=e.detail.value.endDate+' 23:59:59';
-    paras.sName = e.detail.value.name;
+    paras.name = e.detail.value.name;
+    paras.phone=e.detail.value.phone;
+    paras.oId = e.detail.value.oId;
     paras.pageNo =1;
     paras.pageSize=20;
     that.getOrderList(that,baseUrl,paras);

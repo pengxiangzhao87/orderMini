@@ -9,9 +9,7 @@ Page({
     index:0,
     sName:'',
     totalPage:0,
-    page:1,
-    showModal: false,
-    phone:''
+    page:1
   },
   onLoad:function(){
     var that = this;
@@ -290,63 +288,8 @@ Page({
     wx.navigateTo({
       url: '/pages/goods/setting/setting',
     })
-    // var that = this;
-    // var baseUrl = that.data.baseUrl;
-    // wx.request({
-    //   url: baseUrl+"supplier/getSupplier",
-    //   data: {'tId':wx.getStorageSync('sId')},
-    //   method: 'get',
-    //   success(res) {
-    //     that.setData({
-    //       phone:res.data.data.sPhone,
-    //       showModal: true
-    //     })
-    //   }
-    // })
    },
-   
-   preventTouchMove: function() {
-    this.setData({
-      showModal: false
-    })
-   },
-   cancel: function() { 
-    this.setData({
-      showModal: false
-    })
-   },
-   bindingPhone:function(e){
-    var that = this;
-    var phone = e.detail.value.phone;
-    if(!(/^1(3|4|5|6|7|8|9)\d{9}$/.test(phone))){ 
-      wx.showToast({
-        icon:'none',
-        title: '手机号输入有误',
-      })
-      return false; 
-    } 
-    wx.showModal({
-      content: '确定绑定吗?',
-      success (res) {
-        if (res.confirm) {
-          var baseUrl = that.data.baseUrl;
-          wx.request({
-            url: baseUrl+"supplier/bindPhone",
-            data: {'sId':wx.getStorageSync('sId'),'phone':phone},
-            method: 'get',
-            success(res) {
-              that.setData({
-                showModal: false
-              })
-              wx.showToast({
-                title: '绑定成功'
-              })
-            }
-          })
-        }
-      }
-    })
-   }
+    
  
 
 })
