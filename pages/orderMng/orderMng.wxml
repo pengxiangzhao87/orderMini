@@ -46,7 +46,7 @@
     <view style="color:white;display:flex;justify-content: center;width:15%;border-top:0.5px solid #999999;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">状态</view>
   </view>
   <view wx:for="{{orderList}}" wx:for-index="idx" wx:key="oid" wx:for-item="item">
-    <view class="item-row" bindtap="clickRow" data-oid="{{item.o_id}}">
+    <view class="item-row" bindtap="clickRow" data-idx="{{idx}}">
       <view style="align-items: center;height:30px;display:flex;justify-content: center;width:25%;border-bottom:0.5px solid #999999;">{{item.o_id}}</view>
       <view style="align-items: center;height:30px;display:flex;justify-content: center;width:20%;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999;">{{item.orderTime}}</view>
       <view style="align-items: center;height:30px;display:flex;justify-content: center;width:15%;border-bottom:0.5px solid #999999;border-left:0.5px solid #999999">{{item.consignee_name}}</view>

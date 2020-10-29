@@ -5,10 +5,10 @@ page{
 .item{
   background-color: #FFFFFF;
   border-radius: 10px;
-  margin:5px 10px 10px 10px;
+  margin:10px 10px 10px 10px;
   font-size:14px; 
   padding-top:10px;
-  padding-bottom: 2px;
+  padding-bottom:10px;
 }
 .row{
   display: flex;  
@@ -162,3 +162,38 @@ page{
   margin-top:10px; 
 }
 
+.zan-dialog__mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.7);   /*设置阴影半透明背景如： background: rgba(0, 0, 0, 0.4);*/
+  display: none;
+}
+
+.zan-dialog__container {
+  position: fixed;
+  top: 10%;
+  width: 70%;    /*弹窗布局宽*/
+  height: 70%;   /*弹窗布局高，与下面弹出距离transform有关*/
+  margin-left: 15%;
+  padding-left:10px;
+  padding-right:10px;
+  padding-bottom: 10px;
+  background: #f8f8f8;
+  transform: translateY(300%);  /*弹框弹出距离，与弹框布局高度有关，如300%表示弹起距离为3倍弹窗高度 */
+  transition: all 0.4s ease;
+  z-index: 12;
+  border-radius: 10px;
+  font-size:12px;
+}
+
+.zan-dialog--show .zan-dialog__container {
+  transform: translateY(0);
+}
+
+.zan-dialog--show .zan-dialog__mask {
+  display: block;
+}

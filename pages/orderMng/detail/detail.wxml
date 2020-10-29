@@ -1,12 +1,22 @@
 <!--pages/index/detail/detail.wxml-->
 <view style="height:100%;">
+  <view hidden="{{e.express==1}}">
+    <view class="item" style="display:flex;flex-direction:row;align-items: center;" bindtap="toggleDialog">
+      <view style="margin-left:10px;margin-right:10px;">
+        <view>{{expressList[0].time}}</view>
+        <view>{{expressList[0].content}}</view>
+      </view>
+      <image src="/image/zhifu_xiayibu@3x.png" style="height:20px;width:15px;margin-right:10px;margin-left:auto;"></image>
+    </view>
+  </view>
+
   <view class="item">
-    <view style="margin-left:10px;margin-top:5px;">{{list[0].consignee_range_time}}</view>
-    <view style="display:flex;flex-direction:row;align-items: center;font-weight: bolder;margin-top:5px;"  >
+    <view style="margin-left:10px;margin-top:10px;">{{list[0].consignee_range_time}}</view>
+    <view style="display:flex;flex-direction:row;align-items: center;font-weight: bolder;margin-top:10px;"  >
       <view style="margin-left:10px;">{{list[0].consignee_name}}</view>
       <view style="margin-left:5px;color:#1296db" catchtap="callPhone" data-phone="{{list[0].consignee_phone}}">{{list[0].consignee_phone}}</view>
     </view>
-    <view style="margin-left:10px;margin-top:5px;margin-bottom:5px;color:#666666;font-size:13px;">{{list[0].consignee_address}}</view>
+    <view style="margin-left:10px;margin-top:10px;margin-bottom:10px;color:#666666;font-size:13px;">{{list[0].consignee_address}}</view>
   </view>
 
   <view style="margin-top:10px;margin-bottom:50px;" >
@@ -160,3 +170,19 @@
   </view>
 </view>
 
+
+<view class="zan-dialog {{ showDialog ? 'zan-dialog--show' : '' }}">
+  <!-- 如果想点击弹窗外不隐藏，取消bindtap点击事件即可 -->
+  <view class="zan-dialog__mask" bindtap="toggleDialog" />
+  <scroll-view class="zan-dialog__container" scroll-y='true'>
+    <view  wx:for="{{expressList}}" wx:for-index="idx" wx:key="oid" wx:for-item="item">
+      <view style="margin-top:10px;">
+        <view style="display: flex;  flex-direction: row  ;align-items: center;">
+          <image src="/image/linxing.png" style="width:15px;height:15px;"></image>
+          <view style="margin-left:10px;">{{item.time}}</view>
+        </view>
+        <view style="margin-left:25px;">{{item.content}}</view>
+      </view>
+    </view>
+  </scroll-view>
+</view>

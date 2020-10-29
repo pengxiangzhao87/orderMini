@@ -3,9 +3,10 @@ var app = getApp()
 Page({
   data: {
     list:{},
+    expressList:[],
     baseUrl:'',
     imageList:[],
-    oid:0,
+    e:0,
     //0:田园鲜果，1：水晶进口
     isHidden:0,
     rowWW:0,
@@ -15,7 +16,8 @@ Page({
     chargeback:0,
     chargebackPay:0,
     chargebackBack:0,
-    totalGet:0
+    totalGet:0,
+    showDialog: false
   },
   onUnload:function(){
     var pages = getCurrentPages(); //获取当前页面js里面的pages里的所有信息。
@@ -33,7 +35,7 @@ Page({
     var ww = app.globalData.ww;
     var rowWW = ww-30-100;
      this.setData({
-       oid:e.oid,
+       e:e,
        isHidden:isHidden,
        rowWW:rowWW
      })
@@ -43,7 +45,7 @@ Page({
     var isHidden = that.data.isHidden;
     var baseUrl = app.globalData.baseUrl;
     var paras = {};
-    paras.oId=that.data.oid;
+    paras.oId=that.data.e.oid;
     wx.request({
       url: baseUrl+"order/selectPenderDetail",
       method: 'get',
@@ -114,6 +116,25 @@ Page({
         })
       }
     })
+    var e = that.data.e;
+    if(e.express!=1){
+      paras.express=e.express;
+      paras.type = e.type;
+      paras.no = e.no;
+      wx.request({
+        url: baseUrl+"order/getExpressInfo",
+        method: 'get',
+        data: paras,
+        success(res) {
+          if(res.data.code==200){
+            that.setData({
+              expressList:res.data.data
+            })
+          }
+        }
+      })
+    }
+    
   },
   callPhone:function(e){
     var phone = e.currentTarget.dataset.phone;
@@ -134,5 +155,11 @@ Page({
       data: no,
       success (res) {}
     })
-  }
+  },
+  toggleDialog() {
+    this.setData({
+      showDialog: !this.data.showDialog
+    });
+
+  },
 })

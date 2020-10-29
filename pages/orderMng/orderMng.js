@@ -120,9 +120,15 @@ Page({
     that.getOrderList(that,baseUrl,paras);
   },
   clickRow:function(e){
-    var oid = e.currentTarget.dataset.oid;
+    var idx = e.currentTarget.dataset.idx;
+    var that = this;
+    var order = that.data.orderList[idx];
+    var oid = order.o_id;
+    var express = order.is_express;
+    var type = order.express_type;
+    var no = order.express_no;
     wx.navigateTo({
-      url: '/pages/orderMng/detail/detail?oid='+oid
+      url: '/pages/orderMng/detail/detail?oid='+oid+'&express='+express+'&type='+type+'&no='+no
     })
   }
 })
